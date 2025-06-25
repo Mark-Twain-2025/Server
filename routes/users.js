@@ -5,9 +5,9 @@ const { createToken, verifyToken } = require("../utils/auth");
 
 router.post("/signup", async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { name, email, password } = req.body;
     console.log(req.body);
-    const user = await User.signUp(email, password);
+    const user = await User.signUp(name, email, password);
     res.status(201).json(user);
   } catch (err) {
     console.error(err);
