@@ -19,6 +19,9 @@ const signupRouter = require("./routes/signup");
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
 
+const DB_URL =
+  "mongodb+srv://admin:admin1234@hwalbin.zbfsrz5.mongodb.net/?retryWrites=true&w=majority&appName=hwalbin";
+
 mongoose
   .connect(MONGO_HOST, {
     retryWrites: true,
