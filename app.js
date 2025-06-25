@@ -1,4 +1,3 @@
-// db 관리를 위한 dotenv 설치 및 불러오기
 const dotenv = require("dotenv");
 dotenv.config();
 
@@ -8,10 +7,14 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
+const session = require("express-session");
+
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
-// Router 불러오기
 const voteRouter = require("./routes/vote");
+
+const loginRouter = require("./routes/login");
+const signupRouter = require("./routes/signup");
 
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
@@ -64,6 +67,9 @@ app.use(
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/vote", voteRouter);
+
+app.use("/login", loginRouter);
+app.use("/signup", signupRouter)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
