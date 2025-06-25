@@ -3,6 +3,10 @@ const { isEmail } = require("validator");
 const bcrypt = require("bcrypt");
 
 const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: [true, "이름을 입력하여 주세요."],
+    },
     email: {
         type: String,
         required: [true, "이메일을 입력하여 주세요."],
@@ -16,14 +20,14 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-userSchema.statics.signUp = async function (email, password) {
+userSchema.statics.signUp = async function (name, email, password) {
     const salt = await bcrypt.genSalt();
-    console.log(salt);
+    const hashedPassword = await bcrypt.hash(password, salt);
     try {
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const user = await this.create({ email, password: hashedPassword });
+        const user = await this.create({ name, email, password: hashedPassword });
         return {
             _id: user._id,
+            name: user.name,
             email: user.email,
         };
     } catch (err) {
@@ -47,6 +51,7 @@ const visibleUser = userSchema.virtual("visibleUser");
 visibleUser.get(function (value, virtual, doc) {
     return {
         _id: doc._id,
+        name: doc.name,
         email: doc.email,
     };
 });
