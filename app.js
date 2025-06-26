@@ -15,7 +15,6 @@ const voteRouter = require("./routes/vote");
 const categoryRouter = require("./routes/category");
 const loginRouter = require("./routes/login");
 const signupRouter = require("./routes/signup");
-
 const investRouter = require("./routes/investments");
 
 const mongoose = require("mongoose");
@@ -40,6 +39,7 @@ var app = express();
 // app.set('view engine', 'ejs');
 
 const cors = require("cors");
+app.use(logger("dev"));
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -47,7 +47,6 @@ app.use(
   })
 );
 
-app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -73,7 +72,6 @@ app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
 
 app.use("/investments", investRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
