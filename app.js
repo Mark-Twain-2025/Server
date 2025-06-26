@@ -16,6 +16,8 @@ const voteRouter = require("./routes/vote");
 const loginRouter = require("./routes/login");
 const signupRouter = require("./routes/signup");
 
+const investRouter = require("./routes/investments");
+
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
 
@@ -34,7 +36,6 @@ mongoose
     console.log("error");
   });
 
-
 var app = express();
 
 // view engine setup
@@ -49,7 +50,7 @@ app.use(
   })
 );
 
-app.use(logger('dev'));
+app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -67,12 +68,14 @@ app.use(
   })
 );
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
 app.use("/vote", voteRouter);
 
 app.use("/login", loginRouter);
-app.use("/signup", signupRouter)
+app.use("/signup", signupRouter);
+
+app.use("/investments", investRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
