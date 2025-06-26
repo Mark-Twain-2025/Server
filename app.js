@@ -16,6 +16,8 @@ const categoryRouter = require("./routes/category");
 const loginRouter = require("./routes/login");
 const signupRouter = require("./routes/signup");
 
+const investRouter = require("./routes/investments");
+
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
 
@@ -69,6 +71,9 @@ app.use("/vote", voteRouter);
 app.use("/category", categoryRouter);
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
+
+app.use("/investments", investRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
