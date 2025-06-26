@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JWT Token Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+
+        .cookie-info {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #e7f3ff;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>JWT Token 쿠키 테스트</h1>
+
+    <div class="form-group">
+        <label for="name">이름:</label>
+        <input type="text" id="name" placeholder="이름을 입력하세요">
+    </div>
+
+    <div class="form-group">
+        <label for="email">이메일:</label>
+        <input type="email" id="email" placeholder="이메일을 입력하세요">
+    </div>
+
+    <div class="form-group">
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" placeholder="비밀번호를 입력하세요">
+    </div>
+
+    <button onclick="signup()">회원가입</button>
+    <button onclick="login()">로그인</button>
+    <button onclick="logout()">로그아웃</button>
+    <button onclick="checkCookies()">쿠키 확인</button>
+
+    <div id="result" class="result" style="display: none;"></div>
+    <div id="cookieInfo" class="cookie-info" style="display: none;"></div>
+
+    <script>
+        const API_BASE = 'http://localhost:3001';
+
+        async function signup() {
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/signup`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // 쿠키 포함
+                    body: JSON.stringify({ name, email, password })
+                });
+
+                const data = await response.json();
+                showResult('회원가입 결과:', data);
+                checkCookies();
+            } catch (error) {
+                showResult('회원가입 오류:', { error: error.message });
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch(`${API_BASE}/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    credentials: 'include', // 쿠키 포함
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+                showResult('로그인 결과:', data);
+                checkCookies();
+            } catch (error) {
+                showResult('로그인 오류:', { error: error.message });
+            }
+        }
+
+        async function logout() {
+            try {
+                const response = await fetch(`${API_BASE}/login/logout`, {
+                    method: 'POST',
+                    credentials: 'include', // 쿠키 포함
+                });
+
+                const data = await response.json();
+                showResult('로그아웃 결과:', data);
+                checkCookies();
+            } catch (error) {
+                showResult('로그아웃 오류:', { error: error.message });
+            }
+        }
+
+        function checkCookies() {
+            const cookies = document.cookie;
+            const cookieInfo = document.getElementById('cookieInfo');
+
+            if (cookies) {
+                cookieInfo.innerHTML = `
+                    <h3>현재 쿠키:</h3>
+                    <pre>${cookies}</pre>
+                `;
+                cookieInfo.style.display = 'block';
+            } else {
+                cookieInfo.innerHTML = '<h3>쿠키가 없습니다.</h3>';
+                cookieInfo.style.display = 'block';
+            }
+        }
+
+        function showResult(title, data) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h3>${title}</h3>
+                <pre>${JSON.stringify(data, null, 2)}</pre>
+            `;
+            resultDiv.style.display = 'block';
+        }
+
+        // 페이지 로드 시 쿠키 확인
+        window.onload = function () {
+            checkCookies();
+        };
+    </script>
+</body>
+
+</html>
