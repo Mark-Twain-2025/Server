@@ -1,22 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const Investments = require("../models/Investment");
+const VoteBefore = require("../models/VoteBefore");
 const getTodayStr = require("../utils/date");
 
 router.post("/:userId", async (req, res, next) => {
   try {
-    const { category_id, amount, actual_return, rank } = req.body;
+    const { category_id, amount } = req.body;
     const { userId } = req.params;
     console.log(req.body);
-    const investment = await Investments.create({
+    const votebefore = await VoteBefore.create({
       user_id: userId,
       date: getTodayStr(),
       category_id: category_id,
       amount: amount,
-      actual_return: actual_return,
-      rank: rank,
     });
-    res.status(201).json(investment);
+    res.status(201).json(votebefore);
   } catch (err) {
     console.error(err);
     res.status(400);
@@ -36,11 +34,11 @@ router.get("/:userId", async (req, res, next) => {
         .status(400)
         .json({ error: "Query parameter 'date' is required." });
     }
-    const investment = await Investments.find({
+    const votebefore = await VoteBefore.find({
       user_id: Number(userId),
       date: date,
     });
-    res.status(200).json(investment);
+    res.status(200).json(votebefore);
   } catch (err) {
     console.error(err);
     res.status(400);

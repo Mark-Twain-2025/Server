@@ -16,6 +16,9 @@ const categoryRouter = require("./routes/category");
 const loginRouter = require("./routes/login");
 const signupRouter = require("./routes/signup");
 const investRouter = require("./routes/investments");
+const voteBeforeRouter = require("./routes/voteBefore");
+const voteAfterRouter = require("./routes/voteAfter");
+const rankingRouter = require("./routes/ranking");
 
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
@@ -70,8 +73,10 @@ app.use("/vote", voteRouter);
 app.use("/category", categoryRouter);
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
-
 app.use("/investments", investRouter);
+app.use("/vote_before", voteBeforeRouter);
+app.use("/vote_after", voteAfterRouter);
+app.use("/ranking", rankingRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
