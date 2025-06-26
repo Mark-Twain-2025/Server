@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const Counter = require("./Counter"); // index 용 id 필드 생성
 const { isEmail } = require("validator");
 const bcrypt = require("bcrypt");
+const UserInfo = require("./UserInfo");
 
 const userSchema = new mongoose.Schema({
   id: { type: Number, unique: true },
@@ -41,6 +42,9 @@ userSchema.statics.signUp = async function (name, email, password) {
   const hashedPassword = await bcrypt.hash(password, salt);
   try {
     const user = await this.create({ name, email, password: hashedPassword });
+
+    // user에 해당하는 user_info table 생성
+    await UserInfo.create({ user_id: user.id });
     return {
       _id: user._id,
       name: user.name,
