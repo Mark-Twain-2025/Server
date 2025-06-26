@@ -26,16 +26,18 @@ router.get("/:userId", async (req, res, next) => {
   try {
     const { userId } = req.params;
     const { date } = req.query;
+
+    console.log(req.params);
+    console.log(req.query);
     if (!date) {
       return res
         .status(400)
         .json({ error: "Query parameter 'date' is required." });
     }
-    // const investment = await Investments.find({
-    //   user_id: Number(userId),
-    //   date: date,
-    // });
-    const investment = "hi";
+    const investment = await Investments.find({
+      user_id: Number(userId),
+      date: date,
+    });
     res.status(200).json(investment);
   } catch (err) {
     console.error(err);

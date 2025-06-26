@@ -39,6 +39,7 @@ var app = express();
 // app.set('view engine', 'ejs');
 
 const cors = require("cors");
+app.use(logger("dev"));
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -46,7 +47,6 @@ app.use(
   })
 );
 
-app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
