@@ -12,15 +12,13 @@ const session = require("express-session");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const voteRouter = require("./routes/vote");
+const categoryRouter = require("./routes/category");
 const loginRouter = require("./routes/login");
 const signupRouter = require("./routes/signup");
 const investRouter = require("./routes/investments");
 
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
-
-const DB_URL =
-  "mongodb+srv://admin:admin1234@hwalbin.zbfsrz5.mongodb.net/?retryWrites=true&w=majority&appName=hwalbin";
 
 mongoose
   .connect(MONGO_HOST, {
@@ -69,7 +67,7 @@ app.use(
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/vote", voteRouter);
-
+app.use("/category", categoryRouter);
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
 
