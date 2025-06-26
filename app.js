@@ -12,10 +12,8 @@ const session = require("express-session");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const voteRouter = require("./routes/vote");
-
 const loginRouter = require("./routes/login");
 const signupRouter = require("./routes/signup");
-
 const investRouter = require("./routes/investments");
 
 const mongoose = require("mongoose");
