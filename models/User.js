@@ -2,10 +2,10 @@ const mongoose = require("mongoose");
 const Counter = require("./Counter"); // index 용 id 필드 생성
 const { isEmail } = require("validator");
 const bcrypt = require("bcrypt");
-const UserInfo = require("./UserInfo");
+const UserInfo = require("./UserInfo"); // userInfo 생성하기 위해 추가
 
 const userSchema = new mongoose.Schema({
-  id: { type: Number, unique: true },
+  user_id: { type: Number, unique: true },
   name: {
     type: String,
     required: [true, "이름을 입력하여 주세요."],
@@ -32,7 +32,7 @@ userSchema.pre("save", async function (next) {
       { $inc: { count: 1 } },
       { new: true, upsert: true }
     );
-    this.id = counter.count;
+    this.user_id = counter.count;
   }
   next();
 });
@@ -44,7 +44,8 @@ userSchema.statics.signUp = async function (name, email, password) {
     const user = await this.create({ name, email, password: hashedPassword });
 
     // user에 해당하는 user_info table 생성
-    await UserInfo.create({ user_id: user.id });
+    (await UserInfo.create({ user_id: user.user_id })).save();
+
     return {
       _id: user._id,
       name: user.name,
