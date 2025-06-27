@@ -19,7 +19,7 @@ const investSchema = new mongoose.Schema({
     required: true,
   },
   actual_return: { type: Number },
-  is_correct: { type: Boolean },
+  rank: { type: Number },
 });
 
 const Investments = mongoose.model("Investments", investSchema);
