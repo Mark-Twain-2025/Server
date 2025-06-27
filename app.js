@@ -38,7 +38,8 @@ mongoose
     console.log("Connected Successful");
   })
   .catch((err) => {
-    console.log("error");
+
+    console.log("error mongoose");
   });
 
 var app = express();
