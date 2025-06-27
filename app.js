@@ -51,8 +51,7 @@ const cors = require("cors");
 
 app.use(
   cors({
-    // origin: "http://localhost:3000",
-    origin: ["http://54.180.166.227:3000", "http://localhost:3000"],
+    origin: ["https://54.180.166.227", "http://localhost:3000"],
     credentials: true,
   })
 );
