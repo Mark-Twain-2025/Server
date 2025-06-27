@@ -24,6 +24,7 @@ const userInfoRouter = require("./routes/user_info");
 const voteBeforeRouter = require("./routes/voteBefore");
 const voteAfterRouter = require("./routes/voteAfter");
 const rankingRouter = require("./routes/ranking");
+const menuOptionsRouter = require("./routes/menu-options");
 
 
 const mongoose = require("mongoose");
@@ -87,6 +88,7 @@ app.use("/user_info", userInfoRouter);
 app.use("/vote_before", voteBeforeRouter);
 app.use("/vote_after", voteAfterRouter);
 app.use("/ranking", rankingRouter);
+app.use("/menu-options", menuOptionsRouter);
 
 
 // catch 404 and forward to error handler
