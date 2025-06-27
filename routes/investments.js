@@ -5,7 +5,7 @@ const getTodayStr = require("../utils/date");
 
 router.post("/:userId", async (req, res, next) => {
   try {
-    const { category_id, amount, actual_return, rank } = req.body;
+    const { category_id, amount, actual_return, rank, todayLunch} = req.body;
     const { userId } = req.params;
     console.log(req.body);
     const investment = await Investments.create({
@@ -15,6 +15,7 @@ router.post("/:userId", async (req, res, next) => {
       amount: amount,
       actual_return: actual_return,
       rank: rank,
+      todayLunch : todayLunch,
     });
     res.status(201).json(investment);
   } catch (err) {
