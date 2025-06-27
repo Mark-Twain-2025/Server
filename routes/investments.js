@@ -1,16 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const Investments = require("../models/Investment");
-const getTodayStr = require("../utils/date");
 
 router.post("/:userId", async (req, res, next) => {
   try {
-    const { category_id, amount, actual_return, rank, todayLunch} = req.body;
+    const { category_id, amount, actual_return, rank, todayLunch, date } = req.body;
     const { userId } = req.params;
     console.log(req.body);
     const investment = await Investments.create({
       user_id: userId,
-      date: getTodayStr(),
+      date: date,
       category_id: category_id,
       amount: amount,
       actual_return: actual_return,

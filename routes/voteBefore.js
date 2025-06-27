@@ -5,12 +5,12 @@ const getTodayStr = require("../utils/date");
 
 router.post("/:userId", async (req, res, next) => {
   try {
-    const { category_id, amount } = req.body;
+    const { category_id, amount, date } = req.body;
     const { userId } = req.params;
     console.log(req.body);
     const votebefore = await VoteBefore.create({
       user_id: userId,
-      date: getTodayStr(),
+      date: date,
       category_id: category_id,
       amount: amount,
     });

@@ -1,16 +1,15 @@
 const express = require("express");
 const router = express.Router();
 const VoteAfter = require("../models/VoteAfter");
-const getTodayStr = require("../utils/date");
 
 router.post("/:userId", async (req, res, next) => {
   try {
-    const { category_id } = req.body;
+    const { category_id, date } = req.body;
     const { userId } = req.params;
     console.log(req.body);
     const voteafter = await VoteAfter.create({
       user_id: userId,
-      date: getTodayStr(),
+      date: date,
       category_id: category_id,
     });
     res.status(201).json(voteafter);
