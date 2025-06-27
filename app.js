@@ -26,6 +26,7 @@ const voteAfterRouter = require("./routes/voteAfter");
 const rankingRouter = require("./routes/ranking");
 const menuOptionsRouter = require("./routes/menu-options");
 
+const attendanceRouter = require("./routes/attendance");
 
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
@@ -90,6 +91,7 @@ app.use("/vote_after", voteAfterRouter);
 app.use("/ranking", rankingRouter);
 app.use("/menu-options", menuOptionsRouter);
 
+app.use("/attendance", attendanceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
