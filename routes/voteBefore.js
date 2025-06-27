@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const VoteBefore = require("../models/VoteBefore");
-const getTodayStr = require("../utils/date");
+const VoteAfter = require("../models/VoteAfter");
+
+// 테스트용 더미 데이터 생성 API 삭제
 
 router.post("/:userId", async (req, res, next) => {
   try {
