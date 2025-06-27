@@ -6,6 +6,7 @@
 
 var app = require("../app");
 var debug = require("debug")("server:server");
+var http = require("http");
 var https = require("https");
 var fs = require("fs");
 
@@ -17,55 +18,57 @@ var port = normalizePort(process.env.PORT || "3001");
 app.set("port", port);
 
 /**
- * Create HTTPS server.
+ * HTTPS 인증서 경로 (실제 경로로 수정 필요)
  */
-
 var options = {
   key: fs.readFileSync("/home/ec2-user/certs/selfsigned.key"),
   cert: fs.readFileSync("/home/ec2-user/certs/selfsigned.crt"),
 };
 
-var server = https.createServer(options, app);
+/**
+ * Create HTTPS server.
+ */
+var httpsServer = https.createServer(options, app);
+
+/**
+ * HTTP -> HTTPS 리다이렉트 서버
+ */
+http.createServer(function (req, res) {
+  res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+  res.end();
+}).listen(80);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-
-server.listen(port);
-server.on("error", onError);
-server.on("listening", onListening);
+httpsServer.listen(443);
+httpsServer.on("error", onError);
+httpsServer.on("listening", onListening);
 
 /**
  * Normalize a port into a number, string, or false.
  */
-
 function normalizePort(val) {
   var port = parseInt(val, 10);
-
   if (isNaN(port)) {
     // named pipe
     return val;
   }
-
   if (port >= 0) {
     // port number
     return port;
   }
-
   return false;
 }
 
 /**
  * Event listener for HTTPS server "error" event.
  */
-
 function onError(error) {
   if (error.syscall !== "listen") {
     throw error;
   }
-
   var bind = typeof port === "string" ? "Pipe " + port : "Port " + port;
-
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case "EACCES":
@@ -84,9 +87,8 @@ function onError(error) {
 /**
  * Event listener for HTTPS server "listening" event.
  */
-
 function onListening() {
-  var addr = server.address();
+  var addr = httpsServer.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
   console.log(`Server is running at https://localhost:${addr.port}`);
   debug("Listening on " + bind);
