@@ -7,20 +7,19 @@ const { createToken, verifyToken } = require("../utils/auth");
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    
+
     const user = await User.findOne({ user_id: parseInt(id) });
-    
+
     if (!user) {
       return res.status(404).json({ error: "유저를 찾을 수 없습니다." });
     }
-    
+
     res.json({
       name: user.name,
       email: user.email
     });
   } catch (err) {
     return res.status(404).json({ error: "유저를 찾을 수 없습니다." });
-    console.error("에러:", err);
   }
 });
 

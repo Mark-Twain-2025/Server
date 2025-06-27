@@ -48,10 +48,10 @@ var app = express();
 // app.set('view engine', 'ejs');
 
 const cors = require("cors");
-app.use(logger("dev"));
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["https://54.180.166.227", "http://localhost:3000"],
     credentials: true,
   })
 );
