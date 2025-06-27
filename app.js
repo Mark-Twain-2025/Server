@@ -15,11 +15,16 @@ const voteRouter = require("./routes/vote");
 const categoryRouter = require("./routes/category");
 const loginRouter = require("./routes/login");
 const signupRouter = require("./routes/signup");
-
 const investRouter = require("./routes/investments");
+
 const quizRouter = require("./routes/quiz");
 const quizHistoryRouter = require("./routes/quiz_history");
 const userInfoRouter = require("./routes/user_info");
+
+const voteBeforeRouter = require("./routes/voteBefore");
+const voteAfterRouter = require("./routes/voteAfter");
+const rankingRouter = require("./routes/ranking");
+
 
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
@@ -43,6 +48,7 @@ var app = express();
 // app.set('view engine', 'ejs');
 
 const cors = require("cors");
+app.use(logger("dev"));
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -50,7 +56,6 @@ app.use(
   })
 );
 
-app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
@@ -74,12 +79,15 @@ app.use("/vote", voteRouter);
 app.use("/category", categoryRouter);
 app.use("/login", loginRouter);
 app.use("/signup", signupRouter);
-
 app.use("/investments", investRouter);
-
 app.use("/quiz", quizRouter);
 app.use("/quizHistory", quizHistoryRouter);
 app.use("/user_info", userInfoRouter);
+
+app.use("/vote_before", voteBeforeRouter);
+app.use("/vote_after", voteAfterRouter);
+app.use("/ranking", rankingRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const investSchema = new mongoose.Schema({
+const voteBeforeSchema = new mongoose.Schema({
   user_id: {
     type: Number,
     required: true,
@@ -18,10 +18,7 @@ const investSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  actual_return: { type: Number },
-  rank: { type: Number },
 });
 
-const Investments = mongoose.model("Investments", investSchema);
-
-module.exports = Investments;
+const VoteBefore = mongoose.model("VoteBefore", voteBeforeSchema);
+module.exports = VoteBefore;
