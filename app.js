@@ -12,15 +12,22 @@ const session = require("express-session");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const voteRouter = require("./routes/vote");
-
+const categoryRouter = require("./routes/category");
 const loginRouter = require("./routes/login");
 const signupRouter = require("./routes/signup");
+const investRouter = require("./routes/investments");
+
+const quizRouter = require("./routes/quiz");
+const quizHistoryRouter = require("./routes/quiz_history");
+const userInfoRouter = require("./routes/user_info");
+
+const voteBeforeRouter = require("./routes/voteBefore");
+const voteAfterRouter = require("./routes/voteAfter");
+const rankingRouter = require("./routes/ranking");
+
 
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
-
-const DB_URL =
-  "mongodb+srv://admin:admin1234@hwalbin.zbfsrz5.mongodb.net/?retryWrites=true&w=majority&appName=hwalbin";
 
 mongoose
   .connect(MONGO_HOST, {
@@ -34,7 +41,6 @@ mongoose
     console.log("error");
   });
 
-
 var app = express();
 
 // view engine setup
@@ -42,8 +48,6 @@ var app = express();
 // app.set('view engine', 'ejs');
 
 const cors = require("cors");
-
-app.use(logger('dev'));
 
 app.use(
   cors({
@@ -70,12 +74,21 @@ app.use(
   })
 );
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use("/", indexRouter);
+app.use("/users", usersRouter);
 app.use("/vote", voteRouter);
-
+app.use("/category", categoryRouter);
 app.use("/login", loginRouter);
-app.use("/signup", signupRouter)
+app.use("/signup", signupRouter);
+app.use("/investments", investRouter);
+app.use("/quiz", quizRouter);
+app.use("/quizHistory", quizHistoryRouter);
+app.use("/user_info", userInfoRouter);
+
+app.use("/vote_before", voteBeforeRouter);
+app.use("/vote_after", voteAfterRouter);
+app.use("/ranking", rankingRouter);
+
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
