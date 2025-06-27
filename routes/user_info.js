@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const UserInfo = require("../models/UserInfo");
 
-// 특정 유저의 user_info 조회
 router.get("/:user_id", async (req, res, next) => {
   try {
     const { user_id } = req.params;
