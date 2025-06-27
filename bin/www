@@ -20,30 +20,32 @@ app.set("port", port);
 /**
  * HTTPS 인증서 경로 (실제 경로로 수정 필요)
  */
-var options = {
-  key: fs.readFileSync("/home/ec2-user/certs/selfsigned.key"),
-  cert: fs.readFileSync("/home/ec2-user/certs/selfsigned.crt"),
-};
+// var options = {
+//   key: fs.readFileSync("/home/ec2-user/certs/selfsigned.key"),
+//   cert: fs.readFileSync("/home/ec2-user/certs/selfsigned.crt"),
+// };
 
 /**
  * Create HTTPS server.
  */
-var httpsServer = https.createServer(options, app);
+// var httpsServer = https.createServer(options, app);
+var httpServer = http.createServer(app);
+httpServer.on("listening", onListening).on("error", onError);
 
 /**
  * HTTP -> HTTPS 리다이렉트 서버
  */
-http.createServer(function (req, res) {
-  res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
-  res.end();
-}).listen(80);
+// http.createServer(function (req, res) {
+//   res.writeHead(301, { "Location": "https://" + req.headers['host'] + req.url });
+//   res.end();
+// }).listen(80);
 
 /**
  * Listen on provided port, on all network interfaces.
  */
-httpsServer.listen(443);
-httpsServer.on("error", onError);
-httpsServer.on("listening", onListening);
+// httpsServer.listen(443);
+// httpsServer.on("error", onError);
+// httpsServer.on("listening", onListening);
 
 /**
  * Normalize a port into a number, string, or false.
@@ -88,8 +90,9 @@ function onError(error) {
  * Event listener for HTTPS server "listening" event.
  */
 function onListening() {
-  var addr = httpsServer.address();
+  console.log("onListening");
+  var addr = httpServer.address();
   var bind = typeof addr === "string" ? "pipe " + addr : "port " + addr.port;
-  console.log(`Server is running at https://localhost:${addr.port}`);
+  console.log(`Server is running at http://localhost:${addr.port}`);
   debug("Listening on " + bind);
 }
