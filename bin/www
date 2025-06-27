@@ -21,8 +21,8 @@ app.set("port", port);
  */
 
 var options = {
-  key: fs.readFileSync("/etc/ssl/private/selfsigned.key"),
-  cert: fs.readFileSync("/etc/ssl/certs/selfsigned.crt"),
+  key: fs.readFileSync("/home/ec2-user/certs/selfsigned.key"),
+  cert: fs.readFileSync("/home/ec2-user/certs/selfsigned.crt"),
 };
 
 var server = https.createServer(options, app);
