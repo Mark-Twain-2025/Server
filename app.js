@@ -19,6 +19,7 @@ const signupRouter = require("./routes/signup");
 const investRouter = require("./routes/investments");
 const quizRouter = require("./routes/quiz");
 const quizHistoryRouter = require("./routes/quiz_history");
+const userInfoRouter = require("./routes/user_info");
 
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
@@ -78,6 +79,7 @@ app.use("/investments", investRouter);
 
 app.use("/quiz", quizRouter);
 app.use("/quizHistory", quizHistoryRouter);
+app.use("/user_info", userInfoRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
