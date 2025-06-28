@@ -74,20 +74,20 @@ app.use(
   })
 );
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/vote", voteRouter);
-app.use("/category", categoryRouter);
-app.use("/login", loginRouter);
-app.use("/signup", signupRouter);
-app.use("/investments", investRouter);
-app.use("/quiz", quizRouter);
-app.use("/quizHistory", quizHistoryRouter);
-app.use("/user_info", userInfoRouter);
+app.use('/api', indexRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/vote', voteRouter);
+app.use('/api/category', categoryRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/signup', signupRouter);
+app.use('/api/investments', investRouter);
+app.use('/api/quiz', quizRouter);
+app.use('/api/quizHistory', quizHistoryRouter);
+app.use('/api/user_info', userInfoRouter);
 
-app.use("/vote_before", voteBeforeRouter);
-app.use("/vote_after", voteAfterRouter);
-app.use("/ranking", rankingRouter);
+app.use('/api/vote_before', voteBeforeRouter);
+app.use('/api/vote_after', voteAfterRouter);
+app.use('/api/ranking', rankingRouter);
 
 
 // catch 404 and forward to error handler
