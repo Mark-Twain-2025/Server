@@ -64,4 +64,32 @@ router.get("/:userId", async (req, res, next) => {
   }
 });
 
+router.patch("/:voteId", async (req, res) => {
+  try {
+    const { voteId } = req.params;
+    const { category_id } = req.body;
+
+    if (!category_id) {
+      return res.status(400).json({ error: "category_id가 필요합니다." });
+    }
+
+    const updatedVote = await VoteBefore.findByIdAndUpdate(
+      voteId,
+      { category_id },
+      { new: true }
+    );
+
+    if (!updatedVote) {
+      return res
+        .status(404)
+        .json({ error: "해당 투표 정보를 찾을 수 없습니다." });
+    }
+
+    res.status(200).json(updatedVote);
+  } catch (err) {
+    console.error("PATCH 투표 수정 오류:", err);
+    res.status(500).json({ error: "서버 오류" });
+  }
+});
+
 module.exports = router;
