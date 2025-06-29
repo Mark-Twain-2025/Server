@@ -43,7 +43,7 @@ router.post("/login", async (req, res, next) => {
     const tokenMaxAge = 60 * 60 * 24 * 3;
     const token = createToken(user, tokenMaxAge);
     user.token = token;
-    res.cookie("authToken", token, {
+    res.cookie("AuthToken", token, {
       httpOnly: true,
       maxAge: tokenMaxAge * 1000,
     });
@@ -61,7 +61,7 @@ router.post("/login", async (req, res, next) => {
 
 router.all("/logout", async (req, res, next) => {
   try {
-    res.cookie("authToken", "", {
+    res.cookie("A", "", {
       httpOnly: true,
       expires: new Date(0),  // 즉시 만료
     });
@@ -75,7 +75,7 @@ router.all("/logout", async (req, res, next) => {
 });
 
 async function authenticate(req, res, next) {
-  let token = req.cookies.authToken;
+  let token = req.cookies.A;
   let headerToken = req.headers.authorization;
   if (!token && headerToken) {
     token = headerToken.split(" ")[1];

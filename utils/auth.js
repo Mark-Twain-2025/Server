@@ -18,7 +18,8 @@ const loginUser = async (req, res) => {
             httpOnly: true,
             secure: false,
             maxAge: 60 * 60 * 24 * 3 * 1000, // 3일
-            path: '/'
+            path: '/',
+            sameSite: 'lax'
         });
 
         res.status(200).json({ token, user });
@@ -40,7 +41,8 @@ const signupUser = async (req, res) => {
             httpOnly: true,
             secure: false,
             maxAge: 60 * 60 * 24 * 3 * 1000, // 3일
-            path: '/'
+            path: '/',
+            sameSite: 'lax'
         });
 
         res.status(201).json({ token, user });
@@ -54,7 +56,7 @@ const logoutUser = async (req, res) => {
     res.clearCookie('AuthToken', {
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
+        sameSite: 'lax',
         path: '/'
     });
     res.status(200).json({ message: 'Logged out successfully' });
