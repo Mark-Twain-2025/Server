@@ -1,12 +1,11 @@
 const mongoose = require("mongoose");
 const Investments = require("../models/Investment"); // 경로에 따라 조정
 
-mongoose.connect("mongodb+srv://admin:admin1234@hwalbin.zbfsrz5.mongodb.net/?retryWrites=true&w=majority&appName=hwalbin");
+mongoose.connect(
+  "mongodb+srv://admin:admin1234@hwalbin.zbfsrz5.mongodb.net/?retryWrites=true&w=majority&appName=hwalbin"
+);
 
-
-const dummydata = [
-  // 2025-07-04 데이터 (기준일)
-]
+const dummydata = [];
 
 Investments.insertMany(dummydata)
   .then(() => {

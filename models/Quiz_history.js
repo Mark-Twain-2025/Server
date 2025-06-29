@@ -7,7 +7,8 @@ const QuizHistorySchema = new mongoose.Schema({
     unique: true,
   },
   user_id: {
-    type: mongoose.Schema.Types.ObjectId,
+    // type: mongoose.Schema.Types.ObjectId,
+    type: Number,
     ref: "user",
     required: true,
   },
