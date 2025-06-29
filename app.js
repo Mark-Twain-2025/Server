@@ -40,7 +40,6 @@ mongoose
     console.log("Connected Successful");
   })
   .catch((err) => {
-
     console.log("error mongoose");
   });
 
@@ -54,7 +53,11 @@ const cors = require("cors");
 
 app.use(
   cors({
-    origin: ["https://54.180.166.227", "http://54.180.166.227", "http://localhost:3000"],
+    origin: [
+      "https://54.180.166.227",
+      "http://54.180.166.227",
+      "http://localhost:3000",
+    ],
     credentials: true,
   })
 );
@@ -76,26 +79,22 @@ app.use(
   })
 );
 
-app.use('/api', indexRouter);
-app.use('/api/users', usersRouter);
-app.use('/api/vote', voteRouter);
-app.use('/api/category', categoryRouter);
-app.use('/api/login', loginRouter);
-app.use('/api/signup', signupRouter);
-app.use('/api/investments', investRouter);
-app.use('/api/quiz', quizRouter);
-app.use('/api/quizHistory', quizHistoryRouter);
-app.use('/api/user_info', userInfoRouter);
+app.use("/api", indexRouter);
+app.use("/api/users", usersRouter);
+app.use("/api/vote", voteRouter);
+app.use("/api/category", categoryRouter);
+app.use("/api/login", loginRouter);
+app.use("/api/signup", signupRouter);
+app.use("/api/investments", investRouter);
+app.use("/api/quiz", quizRouter);
+app.use("/api/quizHistory", quizHistoryRouter);
+app.use("/api/user_info", userInfoRouter);
 
-app.use('/api/vote_before', voteBeforeRouter);
-app.use('/api/vote_after', voteAfterRouter);
-app.use('/api/ranking', rankingRouter);
-
-// 이것도 api 붙인걸로 해결해야함
-app.use("/menu-options", menuOptionsRouter);
-
-
-app.use("/attendance", attendanceRouter);
+app.use("/api/vote_before", voteBeforeRouter);
+app.use("/api/vote_after", voteAfterRouter);
+app.use("/api/ranking", rankingRouter);
+app.use("/api/menu-options", menuOptionsRouter);
+app.use("/api/attendance", attendanceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
