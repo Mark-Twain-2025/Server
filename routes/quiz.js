@@ -2,6 +2,25 @@ const express = require("express");
 const Quiz = require("../models/Quiz");
 const router = express.Router();
 
+// 랜덤 퀴즈 조회 (1~10 ID 중에서)
+router.get("/random", async (req, res, next) => {
+  try {
+    // 1~10 사이의 랜덤 ID 생성
+    const randomId = Math.floor(Math.random() * 10) + 1;
+
+    const quiz = await Quiz.findOne({ id: randomId });
+
+    if (!quiz) {
+      return res.status(404).json({ error: "해당 ID의 퀴즈가 없습니다." });
+    }
+
+    res.json(quiz);
+  } catch (err) {
+    console.error("랜덤 퀴즈 조회 에러:", err);
+    res.status(500).json({ error: "랜덤 퀴즈 조회 중 오류 발생" });
+  }
+});
+
 router.post("/", async (req, res, next) => {
   try {
     const { date, question, choices, answer_index, explanation } = req.body;

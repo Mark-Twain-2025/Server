@@ -24,7 +24,9 @@ const userInfoRouter = require("./routes/user_info");
 const voteBeforeRouter = require("./routes/voteBefore");
 const voteAfterRouter = require("./routes/voteAfter");
 const rankingRouter = require("./routes/ranking");
+const menuOptionsRouter = require("./routes/menu-options");
 
+const attendanceRouter = require("./routes/attendance");
 
 const mongoose = require("mongoose");
 const MONGO_HOST = process.env.DB_URL;
@@ -89,6 +91,11 @@ app.use('/api/vote_before', voteBeforeRouter);
 app.use('/api/vote_after', voteAfterRouter);
 app.use('/api/ranking', rankingRouter);
 
+// 이것도 api 붙인걸로 해결해야함
+app.use("/menu-options", menuOptionsRouter);
+
+
+app.use("/attendance", attendanceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

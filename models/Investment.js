@@ -20,6 +20,10 @@ const investSchema = new mongoose.Schema({
   },
   actual_return: { type: Number },
   rank: { type: Number },
+
+
+  todayLunch: { type: Number },
+
 });
 
 const Investments = mongoose.model("Investments", investSchema);
