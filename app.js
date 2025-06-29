@@ -90,6 +90,7 @@ app.use("/api/quiz", quizRouter);
 app.use("/api/quizHistory", quizHistoryRouter);
 app.use("/api/user_info", userInfoRouter);
 
+// 왜 안돼???
 app.use("/api/vote_before", voteBeforeRouter);
 app.use("/api/vote_after", voteAfterRouter);
 app.use("/api/ranking", rankingRouter);
