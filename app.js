@@ -40,7 +40,8 @@ mongoose
     console.log("Connected Successful");
   })
   .catch((err) => {
-    console.log("error");
+
+    console.log("error mongoose");
   });
 
 var app = express();
@@ -50,10 +51,10 @@ var app = express();
 // app.set('view engine', 'ejs');
 
 const cors = require("cors");
-app.use(logger("dev"));
+
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: ["https://54.180.166.227", "http://54.180.166.227", "http://localhost:3000"],
     credentials: true,
   })
 );
@@ -75,21 +76,24 @@ app.use(
   })
 );
 
-app.use("/", indexRouter);
-app.use("/users", usersRouter);
-app.use("/vote", voteRouter);
-app.use("/category", categoryRouter);
-app.use("/login", loginRouter);
-app.use("/signup", signupRouter);
-app.use("/investments", investRouter);
-app.use("/quiz", quizRouter);
-app.use("/quizHistory", quizHistoryRouter);
-app.use("/user_info", userInfoRouter);
+app.use('/api', indexRouter);
+app.use('/api/users', usersRouter);
+app.use('/api/vote', voteRouter);
+app.use('/api/category', categoryRouter);
+app.use('/api/login', loginRouter);
+app.use('/api/signup', signupRouter);
+app.use('/api/investments', investRouter);
+app.use('/api/quiz', quizRouter);
+app.use('/api/quizHistory', quizHistoryRouter);
+app.use('/api/user_info', userInfoRouter);
 
-app.use("/vote_before", voteBeforeRouter);
-app.use("/vote_after", voteAfterRouter);
-app.use("/ranking", rankingRouter);
+app.use('/api/vote_before', voteBeforeRouter);
+app.use('/api/vote_after', voteAfterRouter);
+app.use('/api/ranking', rankingRouter);
+
+// 이것도 api 붙인걸로 해결해야함
 app.use("/menu-options", menuOptionsRouter);
+
 
 app.use("/attendance", attendanceRouter);
 

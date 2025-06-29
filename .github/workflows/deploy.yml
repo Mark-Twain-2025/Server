@@ -1,0 +1,31 @@
+name: Deploy Server to EC2
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Copy SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+      - name: Add known hosts
+        run: ssh-keyscan ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Deploy via SSH
+        run: |
+          ssh ec2-user@${{ secrets.EC2_HOST }} <<EOF
+            cd ~/Server
+            git pull origin main
+            npm install
+            pm2 restart Server || pm2 start index.js --name Server
+          EOF
