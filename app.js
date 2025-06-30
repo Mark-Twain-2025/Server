@@ -6,6 +6,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const cron = require("node-cron");
 
 const session = require("express-session");
 
@@ -96,6 +97,152 @@ app.use("/api/vote_after", voteAfterRouter);
 app.use("/api/ranking", rankingRouter);
 app.use("/api/menu-options", menuOptionsRouter);
 app.use("/api/attendance", attendanceRouter);
+
+// 매일 오후 1시 30분에 자동 정산 실행 (운영용)
+cron.schedule('30 13 * * *', async () => {
+  console.log(`[${new Date().toISOString()}] 자동 정산 스케줄러 실행`);
+  
+  try {
+    const Investments = require("./models/Investment");
+    const VoteAfter = require("./models/VoteAfter");
+    const VoteBefore = require("./models/VoteBefore");
+    const Category = require("./models/Category");
+    const Settlement = require("./models/Settlement");
+    const UserInfo = require("./models/UserInfo");
+    
+    const today = new Date().toISOString().split('T')[0];
+    
+    // 해당 날짜의 VoteAfter 데이터 조회 (순위 결정용)
+    const voteAfterData = await VoteAfter.find({ date: today });
+
+    if (voteAfterData.length === 0) {
+      console.log(`[${new Date().toISOString()}] ${today} 투표 데이터 없음`);
+      return;
+    }
+
+    // 해당 날짜의 VoteBefore 데이터 조회 (정산 대상자 확인용)
+    const voteBeforeData = await VoteBefore.find({ date: today });
+    
+    if (voteBeforeData.length === 0) {
+      console.log(`[${new Date().toISOString()}] ${today} 투자 데이터 없음`);
+      return;
+    }
+
+    // VoteBefore에 투표한 사용자 ID 목록 생성
+    const voteBeforeUserIds = voteBeforeData.map(vote => vote.user_id);
+    console.log(`[${new Date().toISOString()}] 투자 참여자 수: ${voteBeforeUserIds.length}명`);
+
+    // 카테고리 정보 조회
+    const categories = await Category.find({});
+    const categoryMap = {};
+    categories.forEach((cat) => {
+      categoryMap[cat.id] = cat.name;
+    });
+
+    // 카테고리별 투표 수 집계 (VoteAfter 기준)
+    const categoryVoteCounts = {};
+    voteAfterData.forEach((vote) => {
+      const categoryId = vote.category_id;
+      if (!categoryVoteCounts[categoryId]) {
+        categoryVoteCounts[categoryId] = 0;
+      }
+      categoryVoteCounts[categoryId]++;
+    });
+
+    // 투표 수 기준으로 순위 계산
+    const sortedCategories = Object.entries(categoryVoteCounts)
+      .sort(([, a], [, b]) => b - a)
+      .map(([categoryId, voteCount], index, array) => {
+        let rank = index + 1;
+        if (index > 0 && voteCount === array[index - 1][1]) {
+          rank = array.findIndex(([, count]) => count === voteCount) + 1;
+        }
+        return { categoryId: parseInt(categoryId), voteCount, rank };
+      });
+
+    // 수익률 배수 정의
+    const getReturnMultiplier = (rank) => {
+      switch (rank) {
+        case 1: return 3.0;
+        case 2: return 2.0;
+        case 3: return 1.0;
+        case 4: return 0.8;
+        case 5: return 0.5;
+        default: return 0.0;
+      }
+    };
+
+    let totalSettledUsers = 0;
+
+    for (const categoryRank of sortedCategories) {
+      const { categoryId, rank } = categoryRank;
+      const multiplier = getReturnMultiplier(rank);
+
+      const investments = await Investments.find({
+        date: today,
+        category_id: categoryId,
+        user_id: { $in: voteBeforeUserIds }
+      });
+
+      for (const investment of investments) {
+        const actualReturn = Math.round(investment.amount * multiplier);
+        const profit = actualReturn - investment.amount;
+
+        // Investment 테이블 업데이트
+        await Investments.findByIdAndUpdate(
+          investment._id,
+          {
+            actual_return: actualReturn,
+            rank: rank,
+          },
+          { new: true }
+        );
+
+        // Settlement 테이블에 정산 내역 저장 (중복 방지)
+        try {
+          await Settlement.create({
+            user_id: investment.user_id,
+            date: today,
+            investment_amount: investment.amount,
+            actual_return: actualReturn,
+            profit: profit,
+            category_id: categoryId,
+            rank: rank,
+            coins_paid: actualReturn
+          });
+
+          // UserInfo 테이블의 코인 업데이트
+          await UserInfo.findOneAndUpdate(
+            { user_id: investment.user_id },
+            { 
+              $inc: { 
+                coins: actualReturn,
+                total_profit: profit,
+                total_participation: 1
+              }
+            }
+          );
+
+          totalSettledUsers++;
+        } catch (settlementError) {
+          if (settlementError.code === 11000) {
+            console.log(`[${new Date().toISOString()}] 이미 정산된 사용자: ${investment.user_id}`);
+            continue;
+          }
+          throw settlementError;
+        }
+      }
+    }
+
+    console.log(`[${new Date().toISOString()}] 자동 정산 완료: ${totalSettledUsers}명 정산됨`);
+  } catch (error) {
+    console.error(`[${new Date().toISOString()}] 자동 정산 실패:`, error.message);
+  }
+}, {
+  timezone: "Asia/Seoul"
+});
+
+console.log("자동 정산 스케줄러가 설정되었습니다. (매일 오후 1시 30분)");
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
