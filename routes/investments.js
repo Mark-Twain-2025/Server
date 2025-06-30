@@ -3,7 +3,7 @@ const router = express.Router();
 const Investments = require("../models/Investment");
 const VoteAfter = require("../models/VoteAfter");
 const Category = require("../models/Category");
-const VoteBefore = require("../models/VoteBefore");
+// const VoteBefore = require("../models/VoteBefore");
 
 // 투표 결과에 따른 수익률 계산 및 업데이트
 router.get("/result", async (req, res, next) => {
@@ -230,7 +230,9 @@ router.patch("/:userId", async (req, res, next) => {
     const { date, category_id } = req.body;
 
     if (!date || !category_id) {
-      return res.status(400).json({ error: "date와 category_id가 필요합니다." });
+      return res
+        .status(400)
+        .json({ error: "date와 category_id가 필요합니다." });
     }
 
     // 해당 사용자의 해당 날짜 투자 기록 찾기
@@ -240,7 +242,9 @@ router.patch("/:userId", async (req, res, next) => {
     });
 
     if (!investment) {
-      return res.status(404).json({ error: "해당 투자 기록을 찾을 수 없습니다." });
+      return res
+        .status(404)
+        .json({ error: "해당 투자 기록을 찾을 수 없습니다." });
     }
 
     // 카테고리 업데이트
@@ -252,7 +256,7 @@ router.patch("/:userId", async (req, res, next) => {
 
     res.status(200).json({
       message: "투자 카테고리가 성공적으로 업데이트되었습니다.",
-      investment: updatedInvestment
+      investment: updatedInvestment,
     });
   } catch (err) {
     console.error("투자 카테고리 업데이트 에러:", err);

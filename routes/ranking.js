@@ -18,21 +18,21 @@ router.get("/daily", async (req, res, next) => {
       { $match: { date } },
       {
         $lookup: {
-          from: "users",             // MongoDB 컬렉션 이름
+          from: "users", // MongoDB 컬렉션 이름
           localField: "user_id",
           foreignField: "user_id",
-          as: "user_info"
-        }
+          as: "user_info",
+        },
       },
-      { $unwind: "$user_info" },     // user_info 배열을 객체로 변환
+      { $unwind: "$user_info" }, // user_info 배열을 객체로 변환
       {
         $project: {
           user_id: 1,
           todayLunch: 1,
           actual_return: 1,
-          name: "$user_info.name"
-        }
-      }
+          name: "$user_info.name",
+        },
+      },
     ]);
 
     // 전날 데이터 조회
@@ -112,18 +112,17 @@ function getPreviousDate(dateStr) {
   return date.toISOString().split("T")[0];
 }
 
-
 router.get("/weekly", async (req, res) => {
-  const { week } = req.query;
+  const week = Number(req.query.week);
 
   let baseDate, targetDate;
   let baseValueForRanking;
 
-  if (week === "1") {
+  if (week === 1) {
     baseDate = null;
     targetDate = "2025-07-04";
     baseValueForRanking = 1000;
-  } else if (week === "2") {
+  } else if (week === 2) {
     baseDate = "2025-07-04";
     targetDate = "2025-07-11";
   } else {
@@ -134,7 +133,9 @@ router.get("/weekly", async (req, res) => {
     // 기준일 데이터
     let baseInvestments = [];
     if (baseDate) {
-      baseInvestments = await Investments.find({ date: baseDate }).select("user_id todayLunch");
+      baseInvestments = await Investments.find({ date: baseDate }).select(
+        "user_id todayLunch"
+      );
     }
 
     // 대상일 데이터 + 이름 조인
@@ -145,17 +146,17 @@ router.get("/weekly", async (req, res) => {
           from: "users",
           localField: "user_id",
           foreignField: "user_id",
-          as: "user_info"
-        }
+          as: "user_info",
+        },
       },
       { $unwind: "$user_info" },
       {
         $project: {
           user_id: 1,
           todayLunch: 1,
-          name: "$user_info.name"
-        }
-      }
+          name: "$user_info.name",
+        },
+      },
     ]);
 
     // 기준 금액 매핑
@@ -166,16 +167,18 @@ router.get("/weekly", async (req, res) => {
 
     // 랭킹 계산
     const rankingCandidates = targetInvestments.map((item) => {
-      const baseLunch = baseDate ? (baseMap[item.user_id] ?? 0) : baseValueForRanking;
+      const baseLunch = baseDate
+        ? baseMap[item.user_id] ?? 0
+        : baseValueForRanking;
       const todayLunch = item.todayLunch;
 
-      const rankValue = week === "1"
-        ? todayLunch - baseValueForRanking
-        : todayLunch - baseLunch;
+      const rankValue =
+        week === "1"
+          ? todayLunch - baseValueForRanking
+          : todayLunch - baseLunch;
 
-      const returnRate = baseLunch > 0
-        ? Math.round((todayLunch / baseLunch) * 100) - 100
-        : null;
+      const returnRate =
+        baseLunch > 0 ? Math.round((todayLunch / baseLunch) * 100) - 100 : null;
 
       return {
         user_id: item.user_id,
@@ -195,8 +198,10 @@ router.get("/weekly", async (req, res) => {
       const result = [];
       let currentRank = 1;
 
-      for (let i = 0; i < arr.length;) {
-        const sameRankGroup = arr.filter(x => x.rankValue === arr[i].rankValue);
+      for (let i = 0; i < arr.length; ) {
+        const sameRankGroup = arr.filter(
+          (x) => x.rankValue === arr[i].rankValue
+        );
 
         if (sameRankGroup.length === 1) {
           sameRankGroup[0].rank = currentRank;
@@ -223,7 +228,7 @@ router.get("/weekly", async (req, res) => {
               result.push(sameRankGroup[j]);
             }
 
-            currentRank += (end - start);
+            currentRank += end - start;
             start = end;
           }
 
@@ -243,6 +248,4 @@ router.get("/weekly", async (req, res) => {
   }
 });
 
-
-
-module.exports = router;  
+module.exports = router;
