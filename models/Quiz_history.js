@@ -7,9 +7,7 @@ const QuizHistorySchema = new mongoose.Schema({
     // unique: true,
   },
   user_id: {
-    // type: mongoose.Schema.Types.ObjectId,
     type: Number,
-    ref: "user",
     required: true,
   },
   quiz_id: {
@@ -24,6 +22,10 @@ const QuizHistorySchema = new mongoose.Schema({
   is_correct: {
     type: Boolean,
     default: null,
+  },
+  date: {
+    type: String,
+    required: true,
   },
 });
 
