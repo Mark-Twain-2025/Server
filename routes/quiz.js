@@ -1,6 +1,12 @@
 const express = require("express");
+const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const Quiz = require("../models/Quiz");
+const QuizHistory = require("../models/Quiz_history");
+const UserInfo = require("../models/UserInfo");
+const User = require("../models/User");
 const router = express.Router();
+const Counter = require("../models/Counter");
 
 // 랜덤 퀴즈 조회 (1~10 ID 중에서)
 router.get("/random", async (req, res, next) => {
@@ -64,39 +70,106 @@ router.get("/:date", async (req, res, next) => {
 });
 
 // 퀴즈 제출 API
-router.post("/submit/:user_id", async (req, res, next) => {
+// quiz.js 라우트 수정
+router.post("/submit", async (req, res, next) => {
+
   try {
-    const { user_id } = req.params;
-    const { selectedIndex } = req.body;
-    const { date } = req.query; // 쿼리 파라미터로 날짜 받기
+    const { selectedIndex, quizId } = req.body;
+    const now = new Date();
+    const today = now.toLocaleDateString('ko-KR', {
+      timeZone: 'Asia/Seoul',
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit'
+    }).replace(/\. /g, '-').replace(/\./g, '');
+    console.log("받은 quizId:", quizId);
 
-    if (selectedIndex === undefined) {
-      return res.status(400).json({ error: "선택한 답안이 없음" });
+    // JWT 토큰에서 user_id 추출
+    const token = req.cookies.AuthToken;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "MyJWT");
+    const userObjectId = decoded.user_id || decoded._id;
+
+    // user_id로 사용자 찾기
+    const user = await User.findOne({ user_id: userObjectId });
+    if (!user) {
+      return res.status(404).json({ error: "사용자를 찾을 수 없습니다." });
     }
 
-    if (!date) {
-      return res.status(400).json({ error: "날짜 파라미터가 필요요" });
+    const user_id = user.user_id; // Number 타입의 user_id
+
+    // 오늘 이미 퀴즈를 풀었는지 확인
+    const existingHistory = await QuizHistory.findOne({
+      user_id: user_id, // Number 타입의 user_id 사용
+      date: today
+    });
+
+    if (existingHistory) {
+      return res.status(400).json({ error: "오늘 이미 퀴즈를 풀었습니다." });
     }
 
-    const quiz = await Quiz.findOne({ date: date });
+    // 정수형 id로 퀴즈 검색
+    let quiz = await Quiz.findOne({ id: quizId });
+    console.log("findOne으로 찾은 quiz:", quiz);
 
     if (!quiz) {
-      return res.status(404).json({ error: "해당 날짜의 퀴즈가 없음음" });
+      return res.status(404).json({ error: "퀴즈를 찾을 수 없습니다." });
     }
 
-    // 정답 여부
     const isCorrect = selectedIndex === quiz.answer_index;
 
-    const response = {
-      isCorrect: isCorrect,
-      explanation: quiz.explanation || "",
-      reward: isCorrect ? 30 : 0
-    };
+    // Counter를 사용하여 QuizHistory의 id 생성
+    const counter = await Counter.findOneAndUpdate(
+      { model: "QuizHistory" },
+      { $inc: { count: 1 } },
+      { new: true, upsert: true }
+    );
 
-    res.json(response);
+    // 퀴즈 히스토리 저장
+    await QuizHistory.create({
+      id: counter.count,
+      user_id: user_id, // Number 타입의 user_id 사용
+      quiz_id: quiz._id,
+      selected_index: selectedIndex,
+      is_correct: isCorrect,
+      date: today
+    });
+
+    // 정답 시 코인 지급
+    let updatedCoins = 0;
+    if (isCorrect) {
+      console.log(`정답! 사용자 ${user_id}에게 30 코인 지급`);
+
+      // UserInfo가 없으면 생성, 있으면 업데이트
+      const userInfo = await UserInfo.findOneAndUpdate(
+        { user_id: user_id }, // Number 타입의 user_id 사용
+        {
+          $inc: { coins: 30 },
+          $setOnInsert: {
+            total_profit: 0,
+            correct_prediction_count: 0,
+            total_participation: 0
+          }
+        },
+        {
+          new: true,
+          upsert: true,
+          setDefaultsOnInsert: true
+        }
+      );
+
+      updatedCoins = userInfo.coins;
+      console.log(`코인 지급 완료. 현재 보유 코인: ${updatedCoins}`);
+    }
+
+    res.json({
+      isCorrect: isCorrect,
+      explanation: quiz.explanation,
+      reward: isCorrect ? 30 : 0,
+      updatedCoins: updatedCoins
+    });
   } catch (err) {
     console.error("퀴즈 제출 에러:", err);
-    res.status(500).json({ error: "퀴즈 제출 중 오류 발생" });
+    res.status(500).json({ error: "퀴즈 제출 오류" });
   }
 });
 

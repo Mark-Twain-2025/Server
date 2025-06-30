@@ -1,10 +1,7 @@
 const mongoose = require("mongoose");
 
 const QuizSchema = new mongoose.Schema({
-  id: {
-    type: Number,
-    unique: true,
-  },
+  _id: { type: mongoose.Schema.Types.ObjectId, ref: "quizzes" },
   date: {
     type: String,
     required: true,
@@ -41,5 +38,5 @@ QuizSchema.pre("save", async function (next) {
   next();
 });
 
-const Quiz = mongoose.model("quiz", QuizSchema);
+const Quiz = mongoose.model("Quiz", QuizSchema, "quizzes");
 module.exports = Quiz;
