@@ -93,11 +93,8 @@ app.use("/api/user_info", userInfoRouter);
 app.use("/api/vote_before", voteBeforeRouter);
 app.use("/api/vote_after", voteAfterRouter);
 app.use("/api/ranking", rankingRouter);
-
-// 이것도 api 붙인걸로 해결해야함
-app.use("/menu-options", menuOptionsRouter);
-
-app.use("/attendance", attendanceRouter);
+app.use("/api/menu-options", menuOptionsRouter);
+app.use("/api/attendance", attendanceRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
