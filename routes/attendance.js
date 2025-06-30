@@ -18,7 +18,6 @@ router.post("/", async function (req, res) {
 // 출석 처리 API
 router.post("/:user_id", async (req, res, next) => {
   try {
-
     const { user_id } = req.params;
     const { date } = req.query;
     const bonus = 30;
@@ -30,17 +29,22 @@ router.post("/:user_id", async (req, res, next) => {
       return res.status(400).json({ error: "date 파라미터가 필요합니다." });
     }
 
-    const already = await Attendance.findOne({ user_id: Number(user_id), date: date });
-    
+    const already = await Attendance.findOne({
+      user_id: Number(user_id),
+      date: date,
+    });
+
     if (already) {
-      return res.status(400).json({ error: "이미 해당 날짜에 출석이 처리되었습니다." });
+      return res
+        .status(400)
+        .json({ error: "이미 해당 날짜에 출석이 처리되었습니다." });
     }
 
     await Attendance.create({
       user_id: Number(user_id),
-      date: date
+      date: date,
     });
-    
+
     await UserInfo.findOneAndUpdate(
       { user_id: Number(user_id) },
       { $inc: { coins: bonus } },
@@ -51,11 +55,25 @@ router.post("/:user_id", async (req, res, next) => {
     res.status(201).json({
       message: "출석 완료",
       today: date,
-      bonus: bonus
+      bonus: bonus,
     });
   } catch (err) {
     console.error("출석 처리 에러:", err);
     res.status(500).json({ error: "출석 처리 중 오류 발생" });
+  }
+});
+
+router.get("/:user_id", async (req, res, next) => {
+  try {
+    const { user_id } = req.params;
+    const records = await Attendance.find({ user_id: Number(user_id) }).select(
+      "date -_id"
+    );
+    const dates = records.map((record) => record.date);
+    res.status(200).json({ dates });
+  } catch (err) {
+    console.error("Error fetching attendance:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 

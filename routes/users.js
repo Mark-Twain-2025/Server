@@ -1,4 +1,4 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
 const { createToken, verifyToken } = require("../utils/auth");
@@ -16,7 +16,7 @@ router.get("/:id", async (req, res, next) => {
 
     res.json({
       name: user.name,
-      email: user.email
+      email: user.email,
     });
   } catch (err) {
     return res.status(404).json({ error: "유저를 찾을 수 없습니다." });
@@ -50,7 +50,7 @@ router.post("/login", async (req, res, next) => {
     console.log(user);
     res.status(201).json({
       message: "LogIn successful",
-      user: user
+      user: user,
     });
   } catch (err) {
     console.error(err);
@@ -63,7 +63,7 @@ router.all("/logout", async (req, res, next) => {
   try {
     res.cookie("authToken", "", {
       httpOnly: true,
-      expires: new Date(0),  // 즉시 만료
+      expires: new Date(0), // 즉시 만료
     });
 
     res.status(200).json({ message: "Logout successful" });
