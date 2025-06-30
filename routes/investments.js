@@ -245,16 +245,29 @@ router.post("/settle-daily", async (req, res, next) => {
           });
 
           // UserInfo 테이블의 코인 업데이트
+          let coinsUpdate = { 
+            $inc: { 
+              coins: actualReturn,
+              total_profit: profit,
+              total_participation: 1
+            }
+          };
+          if (typeof investment.todayLunch === 'number' && !isNaN(investment.todayLunch)) {
+            coinsUpdate.$inc.coins += investment.todayLunch;
+          }
           await UserInfo.findOneAndUpdate(
             { user_id: investment.user_id },
-            { 
-              $inc: { 
-                coins: actualReturn,
-                total_profit: profit,
-                total_participation: 1
-              }
-            }
+            coinsUpdate
           );
+
+          // 정산 후 user_info의 coins 값을 investments의 todayLunch로 업데이트
+          const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+          if (userInfo) {
+            await Investments.findByIdAndUpdate(
+              investment._id,
+              { todayLunch: userInfo.coins }
+            );
+          }
 
           settlementResults.push({
             user_id: investment.user_id,
@@ -268,9 +281,16 @@ router.post("/settle-daily", async (req, res, next) => {
 
           totalSettledUsers++;
         } catch (settlementError) {
-          // 이미 정산된 경우 무시
+          // 이미 정산된 경우에도 todayLunch 업데이트!
           if (settlementError.code === 11000) {
             console.log(`[${new Date().toISOString()}] 이미 정산된 사용자: ${investment.user_id}`);
+            const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+            if (userInfo) {
+              await Investments.findByIdAndUpdate(
+                investment._id,
+                { todayLunch: userInfo.coins }
+              );
+            }
             continue;
           }
           throw settlementError;
@@ -416,16 +436,29 @@ router.post("/settle-test", async (req, res, next) => {
           });
 
           // UserInfo 테이블의 코인 업데이트
+          let coinsUpdate = { 
+            $inc: { 
+              coins: actualReturn,
+              total_profit: profit,
+              total_participation: 1
+            }
+          };
+          if (typeof investment.todayLunch === 'number' && !isNaN(investment.todayLunch)) {
+            coinsUpdate.$inc.coins += investment.todayLunch;
+          }
           await UserInfo.findOneAndUpdate(
             { user_id: investment.user_id },
-            { 
-              $inc: { 
-                coins: actualReturn,
-                total_profit: profit,
-                total_participation: 1
-              }
-            }
+            coinsUpdate
           );
+
+          // 정산 후 user_info의 coins 값을 investments의 todayLunch로 업데이트
+          const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+          if (userInfo) {
+            await Investments.findByIdAndUpdate(
+              investment._id,
+              { todayLunch: userInfo.coins }
+            );
+          }
 
           settlementResults.push({
             user_id: investment.user_id,
@@ -439,9 +472,16 @@ router.post("/settle-test", async (req, res, next) => {
 
           totalSettledUsers++;
         } catch (settlementError) {
-          // 이미 정산된 경우 무시
+          // 이미 정산된 경우에도 todayLunch 업데이트!
           if (settlementError.code === 11000) {
             console.log(`[${new Date().toISOString()}] 이미 정산된 사용자: ${investment.user_id}`);
+            const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+            if (userInfo) {
+              await Investments.findByIdAndUpdate(
+                investment._id,
+                { todayLunch: userInfo.coins }
+              );
+            }
             continue;
           }
           throw settlementError;

@@ -6,7 +6,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const cron = require("node-cron");
+const cron = require("node-cron"); // 자동 정산 스케줄러 추가 
 
 const session = require("express-session");
 
@@ -212,21 +212,40 @@ cron.schedule('30 13 * * *', async () => {
           });
 
           // UserInfo 테이블의 코인 업데이트
+          let coinsUpdate = { 
+            $inc: { 
+              coins: actualReturn,
+              total_profit: profit,
+              total_participation: 1
+            }
+          };
+          if (typeof investment.todayLunch === 'number' && !isNaN(investment.todayLunch)) {
+            coinsUpdate.$inc.coins += investment.todayLunch;
+          }
           await UserInfo.findOneAndUpdate(
             { user_id: investment.user_id },
-            { 
-              $inc: { 
-                coins: actualReturn,
-                total_profit: profit,
-                total_participation: 1
-              }
-            }
+            coinsUpdate
           );
 
-          totalSettledUsers++;
+          // 정산 후 user_info의 coins 값을 investments의 todayLunch로 업데이트
+          const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+          if (userInfo) {
+            await Investments.findByIdAndUpdate(
+              investment._id,
+              { todayLunch: userInfo.coins }
+            );
+          }
         } catch (settlementError) {
+          // 이미 정산된 경우에도 todayLunch 업데이트!
           if (settlementError.code === 11000) {
             console.log(`[${new Date().toISOString()}] 이미 정산된 사용자: ${investment.user_id}`);
+            const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+            if (userInfo) {
+              await Investments.findByIdAndUpdate(
+                investment._id,
+                { todayLunch: userInfo.coins }
+              );
+            }
             continue;
           }
           throw settlementError;
