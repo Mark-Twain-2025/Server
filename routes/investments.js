@@ -223,4 +223,41 @@ router.get("/history/:userId", async function (req, res) {
   }
 });
 
+// 투자 카테고리 업데이트
+router.patch("/:userId", async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+    const { date, category_id } = req.body;
+
+    if (!date || !category_id) {
+      return res.status(400).json({ error: "date와 category_id가 필요합니다." });
+    }
+
+    // 해당 사용자의 해당 날짜 투자 기록 찾기
+    const investment = await Investments.findOne({
+      user_id: Number(userId),
+      date: date,
+    });
+
+    if (!investment) {
+      return res.status(404).json({ error: "해당 투자 기록을 찾을 수 없습니다." });
+    }
+
+    // 카테고리 업데이트
+    const updatedInvestment = await Investments.findByIdAndUpdate(
+      investment._id,
+      { category_id: category_id },
+      { new: true }
+    );
+
+    res.status(200).json({
+      message: "투자 카테고리가 성공적으로 업데이트되었습니다.",
+      investment: updatedInvestment
+    });
+  } catch (err) {
+    console.error("투자 카테고리 업데이트 에러:", err);
+    res.status(500).json({ error: "투자 카테고리 업데이트 중 오류 발생" });
+  }
+});
+
 module.exports = router;
