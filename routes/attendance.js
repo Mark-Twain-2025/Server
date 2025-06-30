@@ -3,6 +3,7 @@ const Attendance = require("../models/Attendance");
 const Category = require("../models/Category");
 const router = express.Router();
 const UserInfo = require("../models/UserInfo");
+const { verifyToken } = require('../utils/auth');
 
 router.post("/", async function (req, res) {
   const data = req.body;
@@ -16,50 +17,33 @@ router.post("/", async function (req, res) {
 });
 
 // 출석 처리 API
-router.post("/:user_id", async (req, res, next) => {
+router.post("/:user_id", verifyToken, async (req, res) => {
+  const user_id = parseInt(req.params.user_id, 10);
+  const today = new Date().toISOString().slice(0, 10);
+
   try {
-    const { user_id } = req.params;
-    const { date } = req.query;
-    const bonus = 30;
-
-    console.log("user_id:", user_id, "date:", date);
-
-    if (!date) {
-      console.log("date 파라미터 없음");
-      return res.status(400).json({ error: "date 파라미터가 필요합니다." });
-    }
-
-    const already = await Attendance.findOne({
-      user_id: Number(user_id),
-      date: date,
-    });
-
+    // 이미 오늘 출석했는지 확인
+    const already = await Attendance.findOne({ user_id, date: today });
     if (already) {
-      return res
-        .status(400)
-        .json({ error: "이미 해당 날짜에 출석이 처리되었습니다." });
+      const userInfo = await UserInfo.findOne({ user_id });
+      return res.json({ coins: userInfo ? userInfo.coins : 0, message: "이미 출석 처리됨" });
     }
 
-    await Attendance.create({
-      user_id: Number(user_id),
-      date: date,
-    });
+    // 출석 처리
+    await Attendance.create({ user_id, date: today });
 
-    await UserInfo.findOneAndUpdate(
-      { user_id: Number(user_id) },
-      { $inc: { coins: bonus } },
-      { new: true }
-    );
-    console.log("UserInfo 코인 증가 완료");
-
-    res.status(201).json({
-      message: "출석 완료",
-      today: date,
-      bonus: bonus,
-    });
+    // 코인 10개 지급
+    const userInfo = await UserInfo.findOne({ user_id });
+    if (userInfo) {
+      userInfo.coins += 10;
+      await userInfo.save();
+      return res.json({ coins: userInfo.coins, message: "출석 보상 10코인 지급" });
+    } else {
+      return res.status(404).json({ message: "UserInfo not found" });
+    }
   } catch (err) {
-    console.error("출석 처리 에러:", err);
-    res.status(500).json({ error: "출석 처리 중 오류 발생" });
+    console.error('출석 처리 에러:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 });
 

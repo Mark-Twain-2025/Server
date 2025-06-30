@@ -1,0 +1,722 @@
+[
+  {
+    "user_id": 1,
+    "date": "2025-07-01",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 1090,
+    "rank": 6,
+    "todayLunch": 1257
+  },
+  {
+    "user_id": 1,
+    "date": "2025-07-02",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1050,
+    "rank": 1,
+    "todayLunch": 1311
+  },
+  {
+    "user_id": 1,
+    "date": "2025-07-03",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 1000,
+    "rank": 14,
+    "todayLunch": 1363
+  },
+  {
+    "user_id": 1,
+    "date": "2025-07-04",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1050,
+    "rank": 12,
+    "todayLunch": 1413
+  },
+  {
+    "user_id": 2,
+    "date": "2025-07-01",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1070,
+    "rank": 11,
+    "todayLunch": 1282
+  },
+  {
+    "user_id": 2,
+    "date": "2025-07-02",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 1090,
+    "rank": 14,
+    "todayLunch": 1335
+  },
+  {
+    "user_id": 2,
+    "date": "2025-07-03",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 900,
+    "rank": 1,
+    "todayLunch": 1389
+  },
+  {
+    "user_id": 2,
+    "date": "2025-07-04",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 1080,
+    "rank": 8,
+    "todayLunch": 1434
+  },
+  {
+    "user_id": 3,
+    "date": "2025-07-01",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 970,
+    "rank": 9,
+    "todayLunch": 1784
+  },
+  {
+    "user_id": 3,
+    "date": "2025-07-02",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 1040,
+    "rank": 18,
+    "todayLunch": 1832
+  },
+  {
+    "user_id": 3,
+    "date": "2025-07-03",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 1050,
+    "rank": 20,
+    "todayLunch": 1884
+  },
+  {
+    "user_id": 3,
+    "date": "2025-07-04",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 920,
+    "rank": 4,
+    "todayLunch": 1936
+  },
+  {
+    "user_id": 4,
+    "date": "2025-07-01",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 970,
+    "rank": 13,
+    "todayLunch": 1698
+  },
+  {
+    "user_id": 4,
+    "date": "2025-07-02",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 950,
+    "rank": 8,
+    "todayLunch": 1746
+  },
+  {
+    "user_id": 4,
+    "date": "2025-07-03",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 960,
+    "rank": 4,
+    "todayLunch": 1793
+  },
+  {
+    "user_id": 4,
+    "date": "2025-07-04",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 920,
+    "rank": 16,
+    "todayLunch": 1841
+  },
+  {
+    "user_id": 5,
+    "date": "2025-07-01",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1050,
+    "rank": 8,
+    "todayLunch": 1849
+  },
+  {
+    "user_id": 5,
+    "date": "2025-07-02",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1070,
+    "rank": 14,
+    "todayLunch": 1901
+  },
+  {
+    "user_id": 5,
+    "date": "2025-07-03",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 900,
+    "rank": 14,
+    "todayLunch": 1954
+  },
+  {
+    "user_id": 5,
+    "date": "2025-07-04",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 920,
+    "rank": 11,
+    "todayLunch": 1999
+  },
+  {
+    "user_id": 6,
+    "date": "2025-07-01",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1000,
+    "rank": 10,
+    "todayLunch": 1910
+  },
+  {
+    "user_id": 6,
+    "date": "2025-07-02",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 1000,
+    "rank": 7,
+    "todayLunch": 1960
+  },
+  {
+    "user_id": 6,
+    "date": "2025-07-03",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 1000,
+    "rank": 1,
+    "todayLunch": 2010
+  },
+  {
+    "user_id": 6,
+    "date": "2025-07-04",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 900,
+    "rank": 7,
+    "todayLunch": 2060
+  },
+  {
+    "user_id": 7,
+    "date": "2025-07-01",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 910,
+    "rank": 12,
+    "todayLunch": 1347
+  },
+  {
+    "user_id": 7,
+    "date": "2025-07-02",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 950,
+    "rank": 14,
+    "todayLunch": 1392
+  },
+  {
+    "user_id": 7,
+    "date": "2025-07-03",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 900,
+    "rank": 8,
+    "todayLunch": 1439
+  },
+  {
+    "user_id": 7,
+    "date": "2025-07-04",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 920,
+    "rank": 2,
+    "todayLunch": 1484
+  },
+  {
+    "user_id": 8,
+    "date": "2025-07-01",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1020,
+    "rank": 2,
+    "todayLunch": 1980
+  },
+  {
+    "user_id": 8,
+    "date": "2025-07-02",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 1080,
+    "rank": 14,
+    "todayLunch": 2031
+  },
+  {
+    "user_id": 8,
+    "date": "2025-07-03",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 950,
+    "rank": 5,
+    "todayLunch": 2085
+  },
+  {
+    "user_id": 8,
+    "date": "2025-07-04",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 970,
+    "rank": 2,
+    "todayLunch": 2132
+  },
+  {
+    "user_id": 9,
+    "date": "2025-07-01",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 950,
+    "rank": 14,
+    "todayLunch": 1844
+  },
+  {
+    "user_id": 9,
+    "date": "2025-07-02",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 1070,
+    "rank": 13,
+    "todayLunch": 1891
+  },
+  {
+    "user_id": 9,
+    "date": "2025-07-03",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 960,
+    "rank": 4,
+    "todayLunch": 1944
+  },
+  {
+    "user_id": 9,
+    "date": "2025-07-04",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1080,
+    "rank": 9,
+    "todayLunch": 1992
+  },
+  {
+    "user_id": 10,
+    "date": "2025-07-01",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1070,
+    "rank": 6,
+    "todayLunch": 1086
+  },
+  {
+    "user_id": 10,
+    "date": "2025-07-02",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 910,
+    "rank": 8,
+    "todayLunch": 1139
+  },
+  {
+    "user_id": 10,
+    "date": "2025-07-03",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 960,
+    "rank": 6,
+    "todayLunch": 1184
+  },
+  {
+    "user_id": 10,
+    "date": "2025-07-04",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1070,
+    "rank": 8,
+    "todayLunch": 1232
+  },
+  {
+    "user_id": 11,
+    "date": "2025-07-01",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 980,
+    "rank": 1,
+    "todayLunch": 1087
+  },
+  {
+    "user_id": 11,
+    "date": "2025-07-02",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 910,
+    "rank": 15,
+    "todayLunch": 1136
+  },
+  {
+    "user_id": 11,
+    "date": "2025-07-03",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 930,
+    "rank": 9,
+    "todayLunch": 1181
+  },
+  {
+    "user_id": 11,
+    "date": "2025-07-04",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 960,
+    "rank": 11,
+    "todayLunch": 1227
+  },
+  {
+    "user_id": 12,
+    "date": "2025-07-01",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 1030,
+    "rank": 12,
+    "todayLunch": 1315
+  },
+  {
+    "user_id": 12,
+    "date": "2025-07-02",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 930,
+    "rank": 1,
+    "todayLunch": 1366
+  },
+  {
+    "user_id": 12,
+    "date": "2025-07-03",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 1080,
+    "rank": 12,
+    "todayLunch": 1412
+  },
+  {
+    "user_id": 12,
+    "date": "2025-07-04",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 950,
+    "rank": 13,
+    "todayLunch": 1466
+  },
+  {
+    "user_id": 13,
+    "date": "2025-07-01",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1040,
+    "rank": 3,
+    "todayLunch": 1503
+  },
+  {
+    "user_id": 13,
+    "date": "2025-07-02",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 1080,
+    "rank": 18,
+    "todayLunch": 1555
+  },
+  {
+    "user_id": 13,
+    "date": "2025-07-03",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 970,
+    "rank": 11,
+    "todayLunch": 1609
+  },
+  {
+    "user_id": 13,
+    "date": "2025-07-04",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 930,
+    "rank": 15,
+    "todayLunch": 1657
+  },
+  {
+    "user_id": 14,
+    "date": "2025-07-01",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 960,
+    "rank": 19,
+    "todayLunch": 1267
+  },
+  {
+    "user_id": 14,
+    "date": "2025-07-02",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 980,
+    "rank": 13,
+    "todayLunch": 1315
+  },
+  {
+    "user_id": 14,
+    "date": "2025-07-03",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 1030,
+    "rank": 7,
+    "todayLunch": 1364
+  },
+  {
+    "user_id": 14,
+    "date": "2025-07-04",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 1000,
+    "rank": 14,
+    "todayLunch": 1415
+  },
+  {
+    "user_id": 15,
+    "date": "2025-07-01",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 990,
+    "rank": 12,
+    "todayLunch": 1125
+  },
+  {
+    "user_id": 15,
+    "date": "2025-07-02",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 910,
+    "rank": 17,
+    "todayLunch": 1174
+  },
+  {
+    "user_id": 15,
+    "date": "2025-07-03",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 1020,
+    "rank": 10,
+    "todayLunch": 1219
+  },
+  {
+    "user_id": 15,
+    "date": "2025-07-04",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 960,
+    "rank": 5,
+    "todayLunch": 1270
+  },
+  {
+    "user_id": 16,
+    "date": "2025-07-01",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1080,
+    "rank": 5,
+    "todayLunch": 1709
+  },
+  {
+    "user_id": 16,
+    "date": "2025-07-02",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1080,
+    "rank": 7,
+    "todayLunch": 1763
+  },
+  {
+    "user_id": 16,
+    "date": "2025-07-03",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 980,
+    "rank": 19,
+    "todayLunch": 1817
+  },
+  {
+    "user_id": 16,
+    "date": "2025-07-04",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1060,
+    "rank": 6,
+    "todayLunch": 1866
+  },
+  {
+    "user_id": 17,
+    "date": "2025-07-01",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 900,
+    "rank": 6,
+    "todayLunch": 1039
+  },
+  {
+    "user_id": 17,
+    "date": "2025-07-02",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 1050,
+    "rank": 14,
+    "todayLunch": 1084
+  },
+  {
+    "user_id": 17,
+    "date": "2025-07-03",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 1070,
+    "rank": 4,
+    "todayLunch": 1136
+  },
+  {
+    "user_id": 17,
+    "date": "2025-07-04",
+    "category_id": 4,
+    "amount": 1000,
+    "actual_return": 910,
+    "rank": 10,
+    "todayLunch": 1189
+  },
+  {
+    "user_id": 18,
+    "date": "2025-07-01",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 1000,
+    "rank": 10,
+    "todayLunch": 1985
+  },
+  {
+    "user_id": 18,
+    "date": "2025-07-02",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 950,
+    "rank": 9,
+    "todayLunch": 2035
+  },
+  {
+    "user_id": 18,
+    "date": "2025-07-03",
+    "category_id": 1,
+    "amount": 1000,
+    "actual_return": 970,
+    "rank": 17,
+    "todayLunch": 2082
+  },
+  {
+    "user_id": 18,
+    "date": "2025-07-04",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 980,
+    "rank": 20,
+    "todayLunch": 2130
+  },
+  {
+    "user_id": 19,
+    "date": "2025-07-01",
+    "category_id": 5,
+    "amount": 1000,
+    "actual_return": 970,
+    "rank": 6,
+    "todayLunch": 1246
+  },
+  {
+    "user_id": 19,
+    "date": "2025-07-02",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1030,
+    "rank": 15,
+    "todayLunch": 1294
+  },
+  {
+    "user_id": 19,
+    "date": "2025-07-03",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 930,
+    "rank": 12,
+    "todayLunch": 1345
+  },
+  {
+    "user_id": 19,
+    "date": "2025-07-04",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1090,
+    "rank": 20,
+    "todayLunch": 1391
+  },
+  {
+    "user_id": 20,
+    "date": "2025-07-01",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 910,
+    "rank": 11,
+    "todayLunch": 1593
+  },
+  {
+    "user_id": 20,
+    "date": "2025-07-02",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 920,
+    "rank": 4,
+    "todayLunch": 1638
+  },
+  {
+    "user_id": 20,
+    "date": "2025-07-03",
+    "category_id": 3,
+    "amount": 1000,
+    "actual_return": 1040,
+    "rank": 20,
+    "todayLunch": 1684
+  },
+  {
+    "user_id": 20,
+    "date": "2025-07-04",
+    "category_id": 2,
+    "amount": 1000,
+    "actual_return": 940,
+    "rank": 10,
+    "todayLunch": 1736
+  }
+]

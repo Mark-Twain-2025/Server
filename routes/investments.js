@@ -7,6 +7,7 @@ const VoteBefore = require("../models/VoteBefore");
 const Settlement = require("../models/Settlement");
 const UserInfo = require("../models/UserInfo");
 
+
 // 1. 구체적인 라우트 먼저!
 router.get("/result", async (req, res, next) => {
   try {
@@ -245,16 +246,29 @@ router.post("/settle-daily", async (req, res, next) => {
           });
 
           // UserInfo 테이블의 코인 업데이트
+          let coinsUpdate = { 
+            $inc: { 
+              coins: actualReturn,
+              total_profit: profit,
+              total_participation: 1
+            }
+          };
+          if (typeof investment.todayLunch === 'number' && !isNaN(investment.todayLunch)) {
+            coinsUpdate.$inc.coins += investment.todayLunch;
+          }
           await UserInfo.findOneAndUpdate(
             { user_id: investment.user_id },
-            { 
-              $inc: { 
-                coins: actualReturn,
-                total_profit: profit,
-                total_participation: 1
-              }
-            }
+            coinsUpdate
           );
+
+          // 정산 후 user_info의 coins 값을 investments의 todayLunch로 업데이트
+          const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+          if (userInfo) {
+            await Investments.findByIdAndUpdate(
+              investment._id,
+              { todayLunch: userInfo.coins }
+            );
+          }
 
           settlementResults.push({
             user_id: investment.user_id,
@@ -268,9 +282,16 @@ router.post("/settle-daily", async (req, res, next) => {
 
           totalSettledUsers++;
         } catch (settlementError) {
-          // 이미 정산된 경우 무시
+          // 이미 정산된 경우에도 todayLunch 업데이트!
           if (settlementError.code === 11000) {
             console.log(`[${new Date().toISOString()}] 이미 정산된 사용자: ${investment.user_id}`);
+            const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+            if (userInfo) {
+              await Investments.findByIdAndUpdate(
+                investment._id,
+                { todayLunch: userInfo.coins }
+              );
+            }
             continue;
           }
           throw settlementError;
@@ -416,16 +437,29 @@ router.post("/settle-test", async (req, res, next) => {
           });
 
           // UserInfo 테이블의 코인 업데이트
+          let coinsUpdate = { 
+            $inc: { 
+              coins: actualReturn,
+              total_profit: profit,
+              total_participation: 1
+            }
+          };
+          if (typeof investment.todayLunch === 'number' && !isNaN(investment.todayLunch)) {
+            coinsUpdate.$inc.coins += investment.todayLunch;
+          }
           await UserInfo.findOneAndUpdate(
             { user_id: investment.user_id },
-            { 
-              $inc: { 
-                coins: actualReturn,
-                total_profit: profit,
-                total_participation: 1
-              }
-            }
+            coinsUpdate
           );
+
+          // 정산 후 user_info의 coins 값을 investments의 todayLunch로 업데이트
+          const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+          if (userInfo) {
+            await Investments.findByIdAndUpdate(
+              investment._id,
+              { todayLunch: userInfo.coins }
+            );
+          }
 
           settlementResults.push({
             user_id: investment.user_id,
@@ -439,9 +473,16 @@ router.post("/settle-test", async (req, res, next) => {
 
           totalSettledUsers++;
         } catch (settlementError) {
-          // 이미 정산된 경우 무시
+          // 이미 정산된 경우에도 todayLunch 업데이트!
           if (settlementError.code === 11000) {
             console.log(`[${new Date().toISOString()}] 이미 정산된 사용자: ${investment.user_id}`);
+            const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+            if (userInfo) {
+              await Investments.findByIdAndUpdate(
+                investment._id,
+                { todayLunch: userInfo.coins }
+              );
+            }
             continue;
           }
           throw settlementError;
@@ -580,7 +621,9 @@ router.patch("/:userId", async (req, res, next) => {
     const { date, category_id } = req.body;
 
     if (!date || !category_id) {
-      return res.status(400).json({ error: "date와 category_id가 필요합니다." });
+      return res
+        .status(400)
+        .json({ error: "date와 category_id가 필요합니다." });
     }
 
     // 해당 사용자의 해당 날짜 투자 기록 찾기
@@ -590,7 +633,9 @@ router.patch("/:userId", async (req, res, next) => {
     });
 
     if (!investment) {
-      return res.status(404).json({ error: "해당 투자 기록을 찾을 수 없습니다." });
+      return res
+        .status(404)
+        .json({ error: "해당 투자 기록을 찾을 수 없습니다." });
     }
 
     // 카테고리 업데이트
@@ -602,7 +647,7 @@ router.patch("/:userId", async (req, res, next) => {
 
     res.status(200).json({
       message: "투자 카테고리가 성공적으로 업데이트되었습니다.",
-      investment: updatedInvestment
+      investment: updatedInvestment,
     });
   } catch (err) {
     console.error("투자 카테고리 업데이트 에러:", err);
