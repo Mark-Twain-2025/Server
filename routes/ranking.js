@@ -13,8 +13,27 @@ router.get("/daily", async (req, res, next) => {
         .json({ error: "Query parameter 'date' is required." });
     }
 
-    // 오늘 데이터 조회
-    const results = await Investments.find({ date });
+    // 오늘 날짜 investment + user 조인
+    const results = await Investments.aggregate([
+      { $match: { date } },
+      {
+        $lookup: {
+          from: "users",             // MongoDB 컬렉션 이름
+          localField: "user_id",
+          foreignField: "user_id",
+          as: "user_info"
+        }
+      },
+      { $unwind: "$user_info" },     // user_info 배열을 객체로 변환
+      {
+        $project: {
+          user_id: 1,
+          todayLunch: 1,
+          actual_return: 1,
+          name: "$user_info.name"
+        }
+      }
+    ]);
 
     // 전날 데이터 조회
     const previousDate = getPreviousDate(date);
@@ -22,7 +41,6 @@ router.get("/daily", async (req, res, next) => {
       date: previousDate,
     }).select("user_id todayLunch");
 
-    // 전날 데이터 매핑
     const prevLunchMap = {};
     previousDayInvestments.forEach((entry) => {
       prevLunchMap[entry.user_id] = entry.todayLunch;
@@ -39,6 +57,7 @@ router.get("/daily", async (req, res, next) => {
 
       return {
         user_id: doc.user_id,
+        name: doc.name,
         actual_return: doc.actual_return,
         todayLunch,
         returnRate,
@@ -57,18 +76,17 @@ router.get("/daily", async (req, res, next) => {
     // 순위 부여
     let ranked = [];
     let currentRank = 1;
-    let prev = null;
+    let prevKey = null;
 
     for (let i = 0; i < processed.length; i++) {
       const item = processed[i];
       const key = `${item.todayLunch}|${item.returnRate}`;
 
-      if (prev && key === prev) {
-        // 같은 todayLunch & returnRate면 공동 순위
-        // rank 유지
+      if (prevKey && key === prevKey) {
+        // 공동 순위 유지
       } else {
         currentRank = i + 1;
-        prev = key;
+        prevKey = key;
       }
 
       ranked.push({
@@ -99,10 +117,10 @@ router.get("/weekly", async (req, res) => {
   const { week } = req.query;
 
   let baseDate, targetDate;
-  let baseValueForRanking; // 1주차 기준값 1000 고정, 2주차는 baseLunch 사용
+  let baseValueForRanking;
 
   if (week === "1") {
-    baseDate = null; // 1주차는 기준일 데이터 조회 안함 (기준값 1000 고정)
+    baseDate = null;
     targetDate = "2025-07-04";
     baseValueForRanking = 1000;
   } else if (week === "2") {
@@ -113,33 +131,55 @@ router.get("/weekly", async (req, res) => {
   }
 
   try {
+    // 기준일 데이터
     let baseInvestments = [];
     if (baseDate) {
       baseInvestments = await Investments.find({ date: baseDate }).select("user_id todayLunch");
     }
 
-    const targetInvestments = await Investments.find({ date: targetDate }).select("user_id todayLunch");
+    // 대상일 데이터 + 이름 조인
+    const targetInvestments = await Investments.aggregate([
+      { $match: { date: targetDate } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "user_id",
+          foreignField: "user_id",
+          as: "user_info"
+        }
+      },
+      { $unwind: "$user_info" },
+      {
+        $project: {
+          user_id: 1,
+          todayLunch: 1,
+          name: "$user_info.name"
+        }
+      }
+    ]);
 
+    // 기준 금액 매핑
     const baseMap = {};
     baseInvestments.forEach((item) => {
       baseMap[item.user_id] = item.todayLunch;
     });
 
-    // 랭킹 산출용 배열 생성
+    // 랭킹 계산
     const rankingCandidates = targetInvestments.map((item) => {
       const baseLunch = baseDate ? (baseMap[item.user_id] ?? 0) : baseValueForRanking;
       const todayLunch = item.todayLunch;
 
-      // 랭킹 기준 금액 계산
       const rankValue = week === "1"
         ? todayLunch - baseValueForRanking
         : todayLunch - baseLunch;
 
-      // 수익률 계산
-      const returnRate = baseLunch > 0 ? Math.round(todayLunch / baseLunch * 100)-100: null;
+      const returnRate = baseLunch > 0
+        ? Math.round((todayLunch / baseLunch) * 100) - 100
+        : null;
 
       return {
         user_id: item.user_id,
+        name: item.name,
         baseLunch,
         todayLunch,
         rankValue,
@@ -147,47 +187,50 @@ router.get("/weekly", async (req, res) => {
       };
     });
 
-    // 1차: rankValue 내림차순 정렬
+    // 정렬
     rankingCandidates.sort((a, b) => b.rankValue - a.rankValue);
 
-    // 동점자 처리 함수
+    // 동점자 처리
     function assignRanks(arr) {
       const result = [];
       let currentRank = 1;
 
-      for (let i = 0; i < arr.length; ) {
-        // 같은 rankValue 그룹 찾기
+      for (let i = 0; i < arr.length;) {
         const sameRankGroup = arr.filter(x => x.rankValue === arr[i].rankValue);
 
         if (sameRankGroup.length === 1) {
-          // 동점자가 없으면 바로 순위 부여
           sameRankGroup[0].rank = currentRank;
           result.push(sameRankGroup[0]);
           currentRank++;
           i++;
         } else {
-          // 동점자가 여러명일 경우, returnRate로 다시 정렬 (내림차순)
           sameRankGroup.sort((a, b) => b.returnRate - a.returnRate);
-
-          // returnRate 기준으로 또 동점 그룹 나눔 (연속된 그룹)
           let start = 0;
+
           while (start < sameRankGroup.length) {
             const currentReturn = sameRankGroup[start].returnRate;
             let end = start + 1;
-            while (end < sameRankGroup.length && sameRankGroup[end].returnRate === currentReturn) {
+
+            while (
+              end < sameRankGroup.length &&
+              sameRankGroup[end].returnRate === currentReturn
+            ) {
               end++;
             }
-            // 해당 그룹에 같은 rank 부여
+
             for (let j = start; j < end; j++) {
               sameRankGroup[j].rank = currentRank;
               result.push(sameRankGroup[j]);
             }
+
             currentRank += (end - start);
             start = end;
           }
+
           i += sameRankGroup.length;
         }
       }
+
       return result;
     }
 
