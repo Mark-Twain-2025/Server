@@ -7,7 +7,6 @@ const VoteBefore = require("../models/VoteBefore");
 const Settlement = require("../models/Settlement");
 const UserInfo = require("../models/UserInfo");
 
-
 // 1. 구체적인 라우트 먼저!
 router.get("/result", async (req, res, next) => {
   try {
@@ -80,17 +79,20 @@ router.get("/settlement-result/:userId", async (req, res, next) => {
     }
 
     // 오늘 날짜 확인
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     const currentTime = new Date();
     const currentHour = currentTime.getHours();
     const currentMinute = currentTime.getMinutes();
 
     // 오전 11시 05분 이전이면 정산 중 메시지 반환
-    if (date === today && (currentHour < 11 || (currentHour === 11 && currentMinute < 5))) {
+    if (
+      date === today &&
+      (currentHour < 11 || (currentHour === 11 && currentMinute < 5))
+    ) {
       return res.status(200).json({
         status: "settling",
         message: "투표 결과 정산 중입니다. 기다려주세요.",
-        settleTime: "오전 11시 05분"
+        settleTime: "오전 11시 05분",
       });
     }
 
@@ -101,15 +103,17 @@ router.get("/settlement-result/:userId", async (req, res, next) => {
     });
 
     if (!settlement) {
-      return res.status(404).json({ 
+      return res.status(404).json({
         error: "해당 날짜의 정산 결과가 없습니다.",
-        message: "아직 정산이 완료되지 않았거나 투자 기록이 없습니다."
+        message: "아직 정산이 완료되지 않았거나 투자 기록이 없습니다.",
       });
     }
 
     // 카테고리 정보 조회
     const category = await Category.findOne({ id: settlement.category_id });
-    const categoryName = category ? category.name : `카테고리${settlement.category_id}`;
+    const categoryName = category
+      ? category.name
+      : `카테고리${settlement.category_id}`;
 
     res.status(200).json({
       status: "settled",
@@ -121,7 +125,7 @@ router.get("/settlement-result/:userId", async (req, res, next) => {
       actual_return: settlement.actual_return,
       profit: settlement.profit,
       coins_paid: settlement.coins_paid,
-      settled_at: settlement.settled_at
+      settled_at: settlement.settled_at,
     });
   } catch (err) {
     console.error("정산 결과 조회 에러:", err);
@@ -131,8 +135,8 @@ router.get("/settlement-result/:userId", async (req, res, next) => {
 
 router.post("/settle-daily", async (req, res, next) => {
   try {
-    const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD 형식
-    
+    const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD 형식
+
     console.log(`[${new Date().toISOString()}] 일일 정산 시작: ${today}`);
 
     // 해당 날짜의 VoteAfter 데이터 조회 (순위 결정용)
@@ -140,20 +144,28 @@ router.post("/settle-daily", async (req, res, next) => {
 
     if (voteAfterData.length === 0) {
       console.log(`[${new Date().toISOString()}] ${today} 투표 데이터 없음`);
-      return res.status(404).json({ error: "해당 날짜의 투표 데이터가 없습니다." });
+      return res
+        .status(404)
+        .json({ error: "해당 날짜의 투표 데이터가 없습니다." });
     }
 
     // 해당 날짜의 VoteBefore 데이터 조회 (정산 대상자 확인용)
     const voteBeforeData = await VoteBefore.find({ date: today });
-    
+
     if (voteBeforeData.length === 0) {
       console.log(`[${new Date().toISOString()}] ${today} 투자 데이터 없음`);
-      return res.status(404).json({ error: "해당 날짜의 투자 데이터가 없습니다." });
+      return res
+        .status(404)
+        .json({ error: "해당 날짜의 투자 데이터가 없습니다." });
     }
 
     // VoteBefore에 투표한 사용자 ID 목록 생성
-    const voteBeforeUserIds = voteBeforeData.map(vote => vote.user_id);
-    console.log(`[${new Date().toISOString()}] 투자 참여자 수: ${voteBeforeUserIds.length}명`);
+    const voteBeforeUserIds = voteBeforeData.map((vote) => vote.user_id);
+    console.log(
+      `[${new Date().toISOString()}] 투자 참여자 수: ${
+        voteBeforeUserIds.length
+      }명`
+    );
 
     // 카테고리 정보 조회
     const categories = await Category.find({});
@@ -214,7 +226,7 @@ router.post("/settle-daily", async (req, res, next) => {
       const investments = await Investments.find({
         date: today,
         category_id: categoryId,
-        user_id: { $in: voteBeforeUserIds } // VoteBefore에 투표한 사람들만 필터링
+        user_id: { $in: voteBeforeUserIds }, // VoteBefore에 투표한 사람들만 필터링
       });
 
       // 각 investment 정산 처리
@@ -242,18 +254,21 @@ router.post("/settle-daily", async (req, res, next) => {
             profit: profit,
             category_id: categoryId,
             rank: rank,
-            coins_paid: actualReturn
+            coins_paid: actualReturn,
           });
 
           // UserInfo 테이블의 코인 업데이트
-          let coinsUpdate = { 
-            $inc: { 
+          let coinsUpdate = {
+            $inc: {
               coins: actualReturn,
               total_profit: profit,
-              total_participation: 1
-            }
+              total_participation: 1,
+            },
           };
-          if (typeof investment.todayLunch === 'number' && !isNaN(investment.todayLunch)) {
+          if (
+            typeof investment.todayLunch === "number" &&
+            !isNaN(investment.todayLunch)
+          ) {
             coinsUpdate.$inc.coins += investment.todayLunch;
           }
           await UserInfo.findOneAndUpdate(
@@ -262,12 +277,13 @@ router.post("/settle-daily", async (req, res, next) => {
           );
 
           // 정산 후 user_info의 coins 값을 investments의 todayLunch로 업데이트
-          const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+          const userInfo = await UserInfo.findOne({
+            user_id: investment.user_id,
+          });
           if (userInfo) {
-            await Investments.findByIdAndUpdate(
-              investment._id,
-              { todayLunch: userInfo.coins }
-            );
+            await Investments.findByIdAndUpdate(investment._id, {
+              todayLunch: userInfo.coins,
+            });
           }
 
           settlementResults.push({
@@ -277,20 +293,25 @@ router.post("/settle-daily", async (req, res, next) => {
             investment_amount: investment.amount,
             actual_return: actualReturn,
             profit: profit,
-            coins_paid: actualReturn
+            coins_paid: actualReturn,
           });
 
           totalSettledUsers++;
         } catch (settlementError) {
           // 이미 정산된 경우에도 todayLunch 업데이트!
           if (settlementError.code === 11000) {
-            console.log(`[${new Date().toISOString()}] 이미 정산된 사용자: ${investment.user_id}`);
-            const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+            console.log(
+              `[${new Date().toISOString()}] 이미 정산된 사용자: ${
+                investment.user_id
+              }`
+            );
+            const userInfo = await UserInfo.findOne({
+              user_id: investment.user_id,
+            });
             if (userInfo) {
-              await Investments.findByIdAndUpdate(
-                investment._id,
-                { todayLunch: userInfo.coins }
-              );
+              await Investments.findByIdAndUpdate(investment._id, {
+                todayLunch: userInfo.coins,
+              });
             }
             continue;
           }
@@ -299,7 +320,9 @@ router.post("/settle-daily", async (req, res, next) => {
       }
     }
 
-    console.log(`[${new Date().toISOString()}] 일일 정산 완료: ${totalSettledUsers}명 정산됨`);
+    console.log(
+      `[${new Date().toISOString()}] 일일 정산 완료: ${totalSettledUsers}명 정산됨`
+    );
 
     res.json({
       message: "일일 정산이 완료되었습니다.",
@@ -311,7 +334,7 @@ router.post("/settle-daily", async (req, res, next) => {
         rank: cat.rank,
         multiplier: getReturnMultiplier(cat.rank),
       })),
-      settlements: settlementResults
+      settlements: settlementResults,
     });
   } catch (err) {
     console.error("일일 정산 에러:", err);
@@ -322,29 +345,43 @@ router.post("/settle-daily", async (req, res, next) => {
 router.post("/settle-test", async (req, res, next) => {
   try {
     const { date } = req.body;
-    const targetDate = date || new Date().toISOString().split('T')[0];
-    
-    console.log(`[${new Date().toISOString()}] 수동 정산 테스트 시작: ${targetDate}`);
+    const targetDate = date || new Date().toISOString().split("T")[0];
+
+    console.log(
+      `[${new Date().toISOString()}] 수동 정산 테스트 시작: ${targetDate}`
+    );
 
     // 해당 날짜의 VoteAfter 데이터 조회 (순위 결정용)
     const voteAfterData = await VoteAfter.find({ date: targetDate });
 
     if (voteAfterData.length === 0) {
-      console.log(`[${new Date().toISOString()}] ${targetDate} 투표 데이터 없음`);
-      return res.status(404).json({ error: "해당 날짜의 투표 데이터가 없습니다." });
+      console.log(
+        `[${new Date().toISOString()}] ${targetDate} 투표 데이터 없음`
+      );
+      return res
+        .status(404)
+        .json({ error: "해당 날짜의 투표 데이터가 없습니다." });
     }
 
     // 해당 날짜의 VoteBefore 데이터 조회 (정산 대상자 확인용)
     const voteBeforeData = await VoteBefore.find({ date: targetDate });
-    
+
     if (voteBeforeData.length === 0) {
-      console.log(`[${new Date().toISOString()}] ${targetDate} 투자 데이터 없음`);
-      return res.status(404).json({ error: "해당 날짜의 투자 데이터가 없습니다." });
+      console.log(
+        `[${new Date().toISOString()}] ${targetDate} 투자 데이터 없음`
+      );
+      return res
+        .status(404)
+        .json({ error: "해당 날짜의 투자 데이터가 없습니다." });
     }
 
     // VoteBefore에 투표한 사용자 ID 목록 생성
-    const voteBeforeUserIds = voteBeforeData.map(vote => vote.user_id);
-    console.log(`[${new Date().toISOString()}] 투자 참여자 수: ${voteBeforeUserIds.length}명`);
+    const voteBeforeUserIds = voteBeforeData.map((vote) => vote.user_id);
+    console.log(
+      `[${new Date().toISOString()}] 투자 참여자 수: ${
+        voteBeforeUserIds.length
+      }명`
+    );
 
     // 카테고리 정보 조회
     const categories = await Category.find({});
@@ -405,7 +442,7 @@ router.post("/settle-test", async (req, res, next) => {
       const investments = await Investments.find({
         date: targetDate,
         category_id: categoryId,
-        user_id: { $in: voteBeforeUserIds } // VoteBefore에 투표한 사람들만 필터링
+        user_id: { $in: voteBeforeUserIds }, // VoteBefore에 투표한 사람들만 필터링
       });
 
       // 각 investment 정산 처리
@@ -433,18 +470,21 @@ router.post("/settle-test", async (req, res, next) => {
             profit: profit,
             category_id: categoryId,
             rank: rank,
-            coins_paid: actualReturn
+            coins_paid: actualReturn,
           });
 
           // UserInfo 테이블의 코인 업데이트
-          let coinsUpdate = { 
-            $inc: { 
+          let coinsUpdate = {
+            $inc: {
               coins: actualReturn,
               total_profit: profit,
-              total_participation: 1
-            }
+              total_participation: 1,
+            },
           };
-          if (typeof investment.todayLunch === 'number' && !isNaN(investment.todayLunch)) {
+          if (
+            typeof investment.todayLunch === "number" &&
+            !isNaN(investment.todayLunch)
+          ) {
             coinsUpdate.$inc.coins += investment.todayLunch;
           }
           await UserInfo.findOneAndUpdate(
@@ -453,12 +493,13 @@ router.post("/settle-test", async (req, res, next) => {
           );
 
           // 정산 후 user_info의 coins 값을 investments의 todayLunch로 업데이트
-          const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+          const userInfo = await UserInfo.findOne({
+            user_id: investment.user_id,
+          });
           if (userInfo) {
-            await Investments.findByIdAndUpdate(
-              investment._id,
-              { todayLunch: userInfo.coins }
-            );
+            await Investments.findByIdAndUpdate(investment._id, {
+              todayLunch: userInfo.coins,
+            });
           }
 
           settlementResults.push({
@@ -468,20 +509,25 @@ router.post("/settle-test", async (req, res, next) => {
             investment_amount: investment.amount,
             actual_return: actualReturn,
             profit: profit,
-            coins_paid: actualReturn
+            coins_paid: actualReturn,
           });
 
           totalSettledUsers++;
         } catch (settlementError) {
           // 이미 정산된 경우에도 todayLunch 업데이트!
           if (settlementError.code === 11000) {
-            console.log(`[${new Date().toISOString()}] 이미 정산된 사용자: ${investment.user_id}`);
-            const userInfo = await UserInfo.findOne({ user_id: investment.user_id });
+            console.log(
+              `[${new Date().toISOString()}] 이미 정산된 사용자: ${
+                investment.user_id
+              }`
+            );
+            const userInfo = await UserInfo.findOne({
+              user_id: investment.user_id,
+            });
             if (userInfo) {
-              await Investments.findByIdAndUpdate(
-                investment._id,
-                { todayLunch: userInfo.coins }
-              );
+              await Investments.findByIdAndUpdate(investment._id, {
+                todayLunch: userInfo.coins,
+              });
             }
             continue;
           }
@@ -490,7 +536,9 @@ router.post("/settle-test", async (req, res, next) => {
       }
     }
 
-    console.log(`[${new Date().toISOString()}] 수동 정산 테스트 완료: ${totalSettledUsers}명 정산됨`);
+    console.log(
+      `[${new Date().toISOString()}] 수동 정산 테스트 완료: ${totalSettledUsers}명 정산됨`
+    );
 
     res.json({
       message: "수동 정산 테스트가 완료되었습니다.",
@@ -502,7 +550,7 @@ router.post("/settle-test", async (req, res, next) => {
         rank: cat.rank,
         multiplier: getReturnMultiplier(cat.rank),
       })),
-      settlements: settlementResults
+      settlements: settlementResults,
     });
   } catch (err) {
     console.error("수동 정산 테스트 에러:", err);

@@ -3,7 +3,7 @@ const Attendance = require("../models/Attendance");
 const Category = require("../models/Category");
 const router = express.Router();
 const UserInfo = require("../models/UserInfo");
-const { verifyToken } = require('../utils/auth');
+const { verifyToken } = require("../utils/auth");
 
 router.post("/", async function (req, res) {
   const data = req.body;
@@ -26,7 +26,10 @@ router.post("/:user_id", verifyToken, async (req, res) => {
     const already = await Attendance.findOne({ user_id, date: today });
     if (already) {
       const userInfo = await UserInfo.findOne({ user_id });
-      return res.json({ coins: userInfo ? userInfo.coins : 0, message: "이미 출석 처리됨" });
+      return res.json({
+        coins: userInfo ? userInfo.coins : 0,
+        message: "이미 출석 처리됨",
+      });
     }
 
     // 출석 처리
@@ -37,13 +40,16 @@ router.post("/:user_id", verifyToken, async (req, res) => {
     if (userInfo) {
       userInfo.coins += 10;
       await userInfo.save();
-      return res.json({ coins: userInfo.coins, message: "출석 보상 10코인 지급" });
+      return res.json({
+        coins: userInfo.coins,
+        message: "출석 보상 10코인 지급",
+      });
     } else {
       return res.status(404).json({ message: "UserInfo not found" });
     }
   } catch (err) {
-    console.error('출석 처리 에러:', err);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("출석 처리 에러:", err);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
