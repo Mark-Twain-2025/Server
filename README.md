@@ -79,9 +79,9 @@
 | **금융 퀴즈** | **퀴즈 풀이 결과** |
 | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 07" src="https://github.com/user-attachments/assets/df2e301c-9f5a-4f63-940f-db5e5e3374ce" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 10" src="https://github.com/user-attachments/assets/00c86888-c631-449e-a968-0e0ae2f53f8f" /> |
 | **일간 랭킹** | **주간 랭킹** |
-| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 10 57" src="https://github.com/user-attachments/assets/1e899dda-aa76-4e48-ab35-c598116c6746" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 01" src="https://github.com/user-attachments/assets/72d8527e-357c-47f6-8058-0cc4c434e40a" /> |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 10 57" src="https://github.com/user-attachments/assets/ab2c54e3-4c91-4b4a-9e81-be3b039ce78c"/> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 01" src="https://github.com/user-attachments/assets/06d0129e-f8e0-49e3-abc2-7ad55992c3f2"/>|
 | **마이페이지** |  |
-| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 17" src="https://github.com/user-attachments/assets/9d5247c1-1186-48ef-80f4-5998a7c2ef65" /> | |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 17" src="https://github.com/user-attachments/assets/d32c6ddd-450f-40db-bf90-1f8b14c67881"/> | |
 
 <br><br>
 
