@@ -1,19 +1,22 @@
-# Lunch Coin 모의 투자 대회 – 친구들의 점심 메뉴에 투자하라!
+# 💰 Lunch Coin 모의 투자 대회 – 친구들의 점심 메뉴에 투자하라!
 매일 아침, 친구들이 점심에 어떤 음식을 가장 많이 먹을지를 예측해서 **런치 코인을 투자**하고,<br>
 실제 점심을 먹은 이후 **투표한 결과에 따라 수익**을 얻는 게임형 웹 서비스<br>
 ➡️ "전략 + 확률 + 소셜 + 게임"을 융합한 점심 투자 게임 플랫폼
 <br><br><br>
 
-## 📌 프로젝트 개요
+## 프로젝트 개요
 
-### 🎯 기획 의도
+### 기획 의도
 매일 반복되는 점심 선택, 이제 게임처럼 즐기자!  
 **Lunch Coin**은 사용자가 점심 메뉴에 **가상의 코인을 투자**하고,  
 **실제 친구들의 식사 선택**에 따라 수익을 얻는 **게임형 예측 플랫폼**입니다.
-<br><br><br>
+<br><br>
 
+### 개발 기간
+2025.06.24 - 2025.06.30 (7일)
+<br><br>
 
-### 👥 팀 소개
+### 팀 소개
 
 | ![김지연](http://github.com/todayiswindy.png)               | ![곽예경](https://github.com/kyun9-cloud.png)            | ![김준호](https://github.com/Mr-Tongyoung.png)               | ![이민주](https://github.com/minju00.png)                   |
 |:----------------------:|:-------------------:|:------------------------:|:---------------------------:|
@@ -23,24 +26,24 @@
 | 메인 화면, 사이드바, <br>회원가입/로그인, 배포 | 마이페이지, 랭킹 페이지 | 퀴즈 페이지, 퀴즈 결과 페이지 | 투자 기능, 투표 기능, <br>수익 정산 페이지       |
 
 <br><br>
-## 🛠️ 사용 기술 및 도구
+## 사용 기술 및 도구
 
-### ⚙️ Frontend
+### Frontend
 - `JavaScript`
 - `React`
 - `Tailwind CSS` / `CSS-in-JS`
 - `Bootstrap`
 
-### 🖥 Backend
+### Backend
 - `Node.js`
 - `MongoDB` (Mongoose ODM)
 - `JWT` 기반 인증 및 사용자 세션 관리
 
-### ☁️ Infra / DevOps
+### Infra / DevOps
 - `AWS EC2` (Ubuntu + PM2 + Nginx + GitHub Actions)
 - `GitHub Actions` (CI/CD 자동 배포)
 
-### 🤝 협업 도구
+### 협업 도구
 - `GitHub` (버전 관리)
 - `Notion` (기획 및 일정 공유)
 - `Figma` (UI/UX 설계)
@@ -48,22 +51,61 @@
 
 <br><br>
 
-## 🖥️ 주요 기능 소개
+## 주요 기능 소개
 
 | 기능 구분 | 상세 설명 |
 |-----------|-----------|
-| 코인 투자 | 매일 아침 10코인 중 일부를 메뉴 분류(한/중/일/양식)에 투자 |
-| 실시간 배당률 | 투자 분포에 따라 각 메뉴별 실시간 배당률 자동 계산 |
+| 코인 투자 | 매일 아침 오늘 친구들이 가장 많이 먹을 것 같은 메뉴(한/중/일/양식)에 투자 |
+| 배당금 | 투자 분포에 따라 각 메뉴별 배당금 자동 계산 |
 | 실제 메뉴 투표 | 점심 식사 후 실제 먹은 음식 분류에 투표 |
-| 결과 계산 | 1위 메뉴 기준 투자 수익/손실 계산 및 시각화 |
-| 주간 랭킹 | 누적 수익, 예측 정확도, 연속 성공자 등 다양한 기준 랭킹 제공 |
+| 결과 계산 | 투자 수익/손실 계산 및 시각화 |
+| 일간/주간 랭킹 | 누적 수익금을 기준으로 랭킹 제공 |
 | 마이페이지 | 투자/수익 히스토리, 누적 코인, 성공률 시각화 |
-
-<img width="930" alt="스크린샷 2025-07-07 오후 7 54 08" src="https://github.com/user-attachments/assets/1a7d6efc-0f76-425f-9b89-69ecfc265246" />
 
 <br><br>
 
-## 🗂️ 서비스 IA (Information Architecture)
+## 실행 화면
+| **메인 화면** | **nav bar** |
+|:-----------:|:-----------:|
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 09 08" src="https://github.com/user-attachments/assets/56350066-e513-44a6-bc1d-42546b6d2f8e" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 09 13" src="https://github.com/user-attachments/assets/125627ff-3e02-462c-bf9a-2e8833a8ce58" /> |
+| **회원가입** | **회원가입 축하 팝업** |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 09 40" src="https://github.com/user-attachments/assets/48b4d35b-a355-4318-8175-418962d92977" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 09 43" src="https://github.com/user-attachments/assets/feb0b5d2-9a9a-44ff-b43e-5e1cbcfe8205" /> |
+| **로그인** | **로그인 축하 팝업** |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 09 54" src="https://github.com/user-attachments/assets/4e6d6ac7-5c39-4fb7-997e-7edb2eb63be3" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 09 57" src="https://github.com/user-attachments/assets/290b8f72-f950-438b-a33a-e5ad73e961a9" /> |
+| **오전 투자** | **투자 결과** |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 10 11" src="https://github.com/user-attachments/assets/451f7c23-3e81-47ca-b5c9-2630374d9b36" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 10 15" src="https://github.com/user-attachments/assets/e06821f5-5de2-4062-8e36-50efb5006b5d" /> |
+| **오후 투표** | **투표 결과** |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 10 30" src="https://github.com/user-attachments/assets/a57cc0e4-4057-4986-935f-2760409e2e19" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 10 37" src="https://github.com/user-attachments/assets/7cad11f3-8833-4be4-ab4a-7bc86a0d6863" /> |
+| **금융 퀴즈** | **퀴즈 풀이 결과** |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 07" src="https://github.com/user-attachments/assets/df2e301c-9f5a-4f63-940f-db5e5e3374ce" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 10" src="https://github.com/user-attachments/assets/00c86888-c631-449e-a968-0e0ae2f53f8f" /> |
+| **일간 랭킹** | **주간 랭킹** |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 10 57" src="https://github.com/user-attachments/assets/1e899dda-aa76-4e48-ab35-c598116c6746" /> | <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 01" src="https://github.com/user-attachments/assets/72d8527e-357c-47f6-8058-0cc4c434e40a" /> |
+| **마이페이지** |  |
+| <img width="1889" height="1105" alt="스크린샷 2025-07-03 오전 8 11 17" src="https://github.com/user-attachments/assets/9d5247c1-1186-48ef-80f4-5998a7c2ef65" /> | |
+
+<br><br>
+
+## ERD
+<img width="1200" height="850" alt="LunchCoin" src="https://github.com/user-attachments/assets/c9882589-2ba1-4b58-a53a-2c45f76e004e" />
+
+<br><br>
+
+## API 명세서
+<img width="1085" height="800" alt="스크린샷 2025-07-13 오전 9 32 31" src="https://github.com/user-attachments/assets/1789f58b-2f5b-4698-8946-b9d431fb0777" />
+
+<br><br>
+
+## Figma
+<img width="1085" height="610" alt="스크린샷 2025-07-13 오전 9 36 28" src="https://github.com/user-attachments/assets/7ea6b1b0-c6a0-46ae-a2b9-41c09290ccd8" />
+
+<br><br>
+
+## 아키텍처 구성
+<img width="1055" height="552" alt="스크린샷 2025-07-13 오전 9 28 40" src="https://github.com/user-attachments/assets/f24b0ddc-1fe0-4d2e-bb60-c3c4bd9c46d1" />
+
+<br><br>
+
+## 구성도
 ```bash
 /
 ├── 회원가입 및 로그인
